@@ -4,8 +4,8 @@ pyramid_authsanity
 
 An sane defaults auth policy for the `Pyramid Web Framework
 <https://docs.pylonsproject.org/projects/pyramid>`__. that works with `Michael
-Merickel's<http://michael.merickel.org>`__ absolutely fantastic
-`pyramid_services<https://github.com/mmerickel/pyramid_services>`__ to provide
+Merickel's <http://michael.merickel.org>`__ absolutely fantastic
+`pyramid_services <https://github.com/mmerickel/pyramid_services>`__ to provide
 an easy to use authorization policy that incorporates web security best
 practices.
 
