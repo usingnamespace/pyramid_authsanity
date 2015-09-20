@@ -19,6 +19,10 @@ tests_require = requires + [
     'pytest',
 ]
 
+docs_require = requires + [
+    'sphinx',
+    ]
+
 setup(
     name='pyramid_authsanity',
     version='0.0.0a0',
@@ -47,6 +51,7 @@ setup(
     install_requires=requires,
     extras_require={
         'testing': tests_require,
+        'docs': docs_require,
     },
     tests_require=tests_require,
     test_suite='pyramid_authsanity',
