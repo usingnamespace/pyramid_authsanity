@@ -19,7 +19,23 @@ from webob.cookies (
         SignedSerializer,
         )
 
+from .interfaces import (
+        IAuthSourceService,
+        IAuthService,
+        )
+
 from zope.interface import implementer
+
+NoAuthCompleted = object()
+
+def _clean_principal(princid):
+    """ Utility function that cleans up the passed in principal
+    This can easily also be extended for example to make sure that certain
+    usernames are automatically off-limits.
+    """
+    if princid in (Authenticated, Everyone):
+        princid = None
+    return princid
 
 @implementer(IAuthenticationPolicy)
 class AuthServicePolicy(object):
@@ -40,31 +56,43 @@ class AuthServicePolicy(object):
         """ We do not allow the unauthenticated userid to be used. """
 
     def authenticated_userid(self, request):
+        """ Returns the authenticated userid for this request. """
+        debug = self.debug
 
+        authsvc = request.get_service(IAuthService)
+        sourcesvc = request.get_service(IAuthSourceService)
 
+        userid = authsvc.userid()
 
+        if userid is NoAuthCompleted:
+            debug and self._log('authentication has not yet been completed',
+                    'authenticated_userid', request)
+            (principal, ticket) = sourcesvc.get_value()
 
+            debug and self._log(
+                'source service provided information: (principal: %r, ticket: %r)'
+                % (principal, ticket), 'authenticated_userid', request)
 
+            # Verify the principal and the ticket, even if None
+            authsvc.verify_ticket(principal, ticket)
+            # This should now return None
+            userid = authsvc.userid()
 
+            if userid is NoAuthCompleted:
+                userid = None
 
+        debug and self._log('authenticated_userid returning: %r' % (userid,),
+                'authenticated_userid', request)
 
+        return userid
 
     def effective_principals(self, request):
-        """ A list of effective principals derived from request.
-
-        This will return a list of principals including, at least,
-        :data:`pyramid.security.Everyone`. If there is no authenticated
-        userid, or the ``callback`` returns ``None``, this will be the
-        only principal:
-
-        .. code-block:: python
-
-            return [Everyone]
-
-        """
+        """ A list of effective principals derived from request. """
         debug = self.debug
         effective_principals = [Everyone]
+
         userid = self.authenticated_userid(request)
+        authsvc = request.get_service(IAuthService)
 
         if userid is None:
             debug and self._log(
@@ -75,25 +103,33 @@ class AuthServicePolicy(object):
                 )
             return effective_principals
 
-        groups = []
-
-        # Get the groups here ...
+        if _clean_principal(userid) is None:
+            debug and self._log(
+                ('authenticated_userid returned disallowed %r; returning %r '
+                 'as if it was None' % (userid, effective_principals)),
+                'effective_principals',
+                request
+                )
+            return effective_principals
 
         effective_principals.append(Authenticated)
         effective_principals.append(userid)
-        effective_principals.extend(groups)
+        effective_principals.extend(authsvc.groups())
 
         debug and self._log(
             'returning effective principals: %r' % (
                 effective_principals,),
             'effective_principals',
             request
-             )
+        )
         return effective_principals
 
     def remember(self, request, principal, **kw):
+        """ Returns a list of headers that are to be set from the source service. """
         debug = self.debug
 
+        authsvc = request.get_service(IAuthService)
+        sourcesvc = request.get_service(IAuthSourceService)
 
         value = {}
         value['principal'] = principal
@@ -101,22 +137,19 @@ class AuthServicePolicy(object):
 
         debug and self._log('Remember principal: %r, ticket: %r' % (principal, ticket), 'remember', request)
 
+        authsvc.add_ticket(principal, ticket)
 
-        if self.domains is None:
-            self.domains = []
-            self.domains.append(request.domain)
-
-        return self.cookie.get_headers(value, domains=self.domains)
+        return sourcesvc.headers_remember(value)
 
     def forget(self, request):
         """ A list of headers which will delete appropriate cookies."""
-
         debug = self.debug
-        user = request.user
 
-        if user.ticket:
-            debug and self._log('forgetting user: %s, removing ticket: %s' % (user.id, user.ticket.ticket), 'forget', request)
-            request.dbsession.delete(user.ticket)
+        authsvc = request.get_service(IAuthService)
+        sourcesvc = request.get_service(IAuthSourceService)
 
-        return self.cookie.get_headers('', max_age=0)
+        (_, ticket) = value = sourcesvc.get_value()
+        authsvc.remove_ticket(ticket)
+
+        return sourcesvc.headers_forget()
 
