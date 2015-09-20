@@ -19,9 +19,18 @@ absolutely fantastic `pyramid_services
 developer to easily plug in their own sources, and interact with their user
 database.
 
+API Documentation
+=================
+
+Reference material for every public API exposed by pyramid_authsanity:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
+   :glob:
+
+   api/*
+
+
 FAQ
 ===
 
