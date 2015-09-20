@@ -36,33 +36,7 @@ class AuthServicePolicy(object):
             methodname = classname + '.' + methodname
             logger.debug(methodname + ': ' + msg)
 
-    def __init__(self,
-                 secret,
-                 cookie_name='auth',
-                 secure=False,
-                 max_age=None,
-                 httponly=False,
-                 path="/",
-                 domains=None,
-                 timeout=None,
-                 reissue_time=None,
-                 debug=False,
-                 hashalg='sha512',
-                 ):
-
-        self.domains = domains
-
-        self.cookie = SignedCookieProfile(
-            secret,
-            'authsanity',
-            cookie_name,
-            secure=secure,
-            max_age=max_age,
-            httponly=httponly,
-            path=path,
-            domains=domains,
-            hashalg=hashalg,
-            )
+    def __init__(debug=False):
         self.debug = debug
 
     def unauthenticated_userid(self, request):
@@ -70,38 +44,14 @@ class AuthServicePolicy(object):
         return None
 
     def authenticated_userid(self, request):
-        """ Return the authenticated userid or ``None``."""
 
-        try:
-            return request.state['auth']['userinfo'].id
-        except:
-            pass
 
-        result = self.cookie.bind(request).get_value()
 
-        if result:
-            principal = result['principal']
-            ticket = result['ticket']
-            tokens = result['tokens']
 
-            valid_ticket = find_user_ticket(request, principal, ticket, tokens)
 
-        self.debug and self._log('Got result from cookie: %s' % (result,), 'authenticated_userid', request)
-        return None
 
-    def find_user_ticket(self, request, principal, ticket, tokens):
-        """ Update the user service to a valid user id if the users ticket matches """
 
-        if not ticket or not principal:
-            return False
 
-        ticket = UserTickets.find_ticket_userid(request.dbsession, ticket, principal)
-
-        if ticket is None:
-            self.debug and self._log('No ticket found', 'find_user_ticket', request)
-            self.cookie.set_cookies(request.response, '', max_age=0)
-
-        return ticket
 
     def effective_principals(self, request):
         """ A list of effective principals derived from request.
@@ -145,15 +95,7 @@ class AuthServicePolicy(object):
              )
         return effective_principals
 
-
-    def remember(self, request, principal, tokens=None, **kw):
-        """ Accepts the following kw args: ``max_age=<int-seconds>``
-
-        Return a list of headers which will set appropriate cookies on
-        the response.
-
-        """
-
+    def remember(self, request, principal, **kw):
         debug = self.debug
 
         hashalg = 'sha256'
@@ -164,14 +106,7 @@ class AuthServicePolicy(object):
         value['ticket'] = ticket = digestmethod(urandom(32)).hexdigest()
         value['tokens'] = tokens if tokens is not None else []
 
-        user = request.dbsession.query(User).filter(User.email == principal).first()
 
-        if user is None:
-            raise ValueError('Invalid principal provided')
-
-        debug and self._log('Remember user: %s, ticket: %s' % (user.email, value['ticket']), 'remember', request)
-
-        user.tickets.append(UserTickets(ticket=ticket, remote_addr=remote_addr))
 
         if self.domains is None:
             self.domains = []
