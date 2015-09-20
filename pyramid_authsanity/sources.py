@@ -9,6 +9,9 @@ from .interfaces (
         IAuthSourceService,
         )
 
+def SessionAuthSourceFactory():
+    return SessionAuthSource
+
 @implementer(IAuthSourceService)
 class SessionAuthSource(object):
     """ An authentication source that uses the current session """
