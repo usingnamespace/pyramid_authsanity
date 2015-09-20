@@ -13,7 +13,7 @@ easier to write a seure authentication policy that follows web best practices.
   userid than before.
 - Automatically adds the Vary HTTP header if the authentication policy is used.
 
-pyramid_authsanity `Michael Merickel's <http://michael.merickel.org>`__
+pyramid_authsanity uses `Michael Merickel's <http://michael.merickel.org>`__
 absolutely fantastic `pyramid_services
 <https://github.com/mmerickel/pyramid_services>`__ to allow an application
 developer to easily plug in their own sources, and interact with their user
