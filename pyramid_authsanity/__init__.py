@@ -16,6 +16,10 @@ from .interfaces import (
         IAuthService,
         )
 
+from .util import (
+        add_vary_callback,
+        )
+
 from zope.interface import implementer
 
 NoAuthCompleted = object()
@@ -51,6 +55,7 @@ class AuthServicePolicy(object):
 
         authsvc = request.get_service(IAuthService)
         sourcesvc = request.get_service(IAuthSourceService)
+        request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
         userid = authsvc.userid()
 
@@ -120,6 +125,7 @@ class AuthServicePolicy(object):
 
         authsvc = request.get_service(IAuthService)
         sourcesvc = request.get_service(IAuthSourceService)
+        request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
         value = {}
         value['principal'] = principal
@@ -137,6 +143,7 @@ class AuthServicePolicy(object):
 
         authsvc = request.get_service(IAuthService)
         sourcesvc = request.get_service(IAuthSourceService)
+        request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
         (_, ticket) = value = sourcesvc.get_value()
         authsvc.remove_ticket(ticket)
