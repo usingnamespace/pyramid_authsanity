@@ -1,12 +1,8 @@
 import logging
 log = logging.getLogger(__name__)
 
-import string
-import hashlib
-
-from os import urandom
-
-from zope.interface import implementer
+import base64
+import os
 
 from pyramid.interfaces import (
     IAuthenticationPolicy,
@@ -23,6 +19,7 @@ from webob.cookies (
         SignedSerializer,
         )
 
+from zope.interface import implementer
 
 @implementer(IAuthenticationPolicy)
 class AuthServicePolicy(object):
@@ -97,14 +94,12 @@ class AuthServicePolicy(object):
     def remember(self, request, principal, **kw):
         debug = self.debug
 
-        hashalg = 'sha256'
-        digestmethod = lambda string=b'': hashlib.new(hashalg, string)
 
         value = {}
         value['principal'] = principal
-        value['ticket'] = ticket = digestmethod(urandom(32)).hexdigest()
-        value['tokens'] = tokens if tokens is not None else []
+        value['ticket'] = ticket = base64.urlsafe_b64encode(os.urandom(32)).rstrip(b"=")
 
+        debug and self._log('Remember principal: %r, ticket: %r' % (principal, ticket), 'remember', request)
 
 
         if self.domains is None:
