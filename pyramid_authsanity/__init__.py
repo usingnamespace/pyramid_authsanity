@@ -14,11 +14,6 @@ from pyramid.security import (
     Everyone,
     )
 
-from webob.cookies (
-        SignedCookieProfile,
-        SignedSerializer,
-        )
-
 from .interfaces import (
         IAuthSourceService,
         IAuthService,
