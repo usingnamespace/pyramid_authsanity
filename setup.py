@@ -21,6 +21,7 @@ tests_require = requires + [
 
 docs_require = requires + [
     'sphinx',
+    'repoze.sphinx.autointerface',
     ]
 
 setup(
