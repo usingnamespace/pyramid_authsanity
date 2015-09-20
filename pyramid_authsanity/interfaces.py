@@ -6,7 +6,7 @@ from zope.interface import (
 class IAuthSourceService(Interface):
     """ Represents an authentication source. """
 
-    vary = Attribute("Tuple of HTTP headers to Vary the response by.")
+    vary = Attribute("List of HTTP headers to Vary the response by.")
 
     def get_value():
         """ Returns the opaque value that was stored. """
