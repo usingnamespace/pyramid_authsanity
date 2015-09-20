@@ -16,7 +16,7 @@ def SessionAuthSourceFactory():
 class SessionAuthSource(object):
     """ An authentication source that uses the current session """
 
-    vary = ()
+    vary = []
     value_key = 'sanity.value'
 
     def __init__(self, context, request):
@@ -55,6 +55,9 @@ def CookieAuthSourceFactory(
 
     @implementer(IAuthSourceService)
     class CookieAuthSource(object):
+
+        vary = ['Cookie']
+
         def __init__(self, context, request):
             self.domains = domains
 
