@@ -1,11 +1,11 @@
-from webob.cookies (
+from webob.cookies import (
         SignedCookieProfile,
         SignedSerializer,
         )
 
 from zope.interface import implementer
 
-from .interfaces (
+from .interfaces import (
         IAuthSourceService,
         )
 
