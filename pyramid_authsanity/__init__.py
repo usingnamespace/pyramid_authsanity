@@ -25,7 +25,9 @@ from webob.cookies (
 
 
 @implementer(IAuthenticationPolicy)
-class AuthPolicy(object):
+class AuthServicePolicy(object):
+    debug = False
+
     def _log(self, msg, methodname, request):
         logger = request.registry.queryUtility(IDebugLogger)
         if logger:
