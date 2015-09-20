@@ -34,8 +34,6 @@ def _clean_principal(princid):
 
 @implementer(IAuthenticationPolicy)
 class AuthServicePolicy(object):
-    debug = False
-
     def _log(self, msg, methodname, request):
         logger = request.registry.queryUtility(IDebugLogger)
         if logger:
