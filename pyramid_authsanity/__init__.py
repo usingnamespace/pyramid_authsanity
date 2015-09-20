@@ -40,8 +40,7 @@ class AuthServicePolicy(object):
         self.debug = debug
 
     def unauthenticated_userid(self, request):
-        """ No support for the unauthenticated userid """
-        return None
+        """ We do not allow the unauthenticated userid to be used. """
 
     def authenticated_userid(self, request):
 
