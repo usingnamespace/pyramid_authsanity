@@ -10,6 +10,7 @@ from .interfaces import (
         )
 
 def SessionAuthSourceFactory():
+    """ An authentication source that uses the current session """
     return SessionAuthSource
 
 @implementer(IAuthSourceService)
