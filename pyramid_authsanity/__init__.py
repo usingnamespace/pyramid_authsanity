@@ -152,3 +152,6 @@ class AuthServicePolicy(object):
 
         return sourcesvc.headers_forget()
 
+
+def includeme(config):
+    config.set_authentication_policy(AuthServicePolicy())
