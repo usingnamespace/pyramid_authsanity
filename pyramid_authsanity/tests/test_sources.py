@@ -1,4 +1,3 @@
-import logging
 from collections import Iterable
 
 from pyramid_authsanity.interfaces import IAuthSourceService
