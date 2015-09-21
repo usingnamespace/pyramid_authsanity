@@ -43,7 +43,7 @@ class AuthServicePolicy(object):
             methodname = classname + '.' + methodname
             logger.debug(methodname + ': ' + msg)
 
-    def __init__(debug=False):
+    def __init__(self, debug=False):
         self.debug = debug
 
     def unauthenticated_userid(self, request):
