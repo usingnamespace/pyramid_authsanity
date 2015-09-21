@@ -15,7 +15,7 @@ def InnerFactory(cls):
         return cls(context, request)
     return inner
 
-def _get_services(request):
+def _find_services(request):
     sourcesvc = request.find_service(IAuthSourceService)
     authsvc = request.find_service(IAuthService)
 

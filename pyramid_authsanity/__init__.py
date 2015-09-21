@@ -18,7 +18,7 @@ from .interfaces import (
 
 from .util import (
         add_vary_callback,
-        _get_services,
+        _find_services,
         )
 
 from zope.interface import implementer
@@ -44,7 +44,7 @@ class AuthServicePolicy(object):
             methodname = classname + '.' + methodname
             logger.debug(methodname + ': ' + msg)
 
-    _get_services = staticmethod(_get_services) # Testing
+    _find_services = staticmethod(_find_services) # Testing
 
     def __init__(self, debug=False):
         self.debug = debug
@@ -56,7 +56,7 @@ class AuthServicePolicy(object):
         """ Returns the authenticated userid for this request. """
         debug = self.debug
 
-        (sourcesvc, authsvc) = self._get_services(request)
+        (sourcesvc, authsvc) = self._find_services(request)
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
         userid = authsvc.userid()
@@ -89,7 +89,7 @@ class AuthServicePolicy(object):
         effective_principals = [Everyone]
 
         userid = self.authenticated_userid(request)
-        (_, authsvc) = self._get_services(request)
+        (_, authsvc) = self._find_services(request)
 
         if userid is None:
             debug and self._log(
@@ -125,7 +125,7 @@ class AuthServicePolicy(object):
         """ Returns a list of headers that are to be set from the source service. """
         debug = self.debug
 
-        (sourcesvc, authsvc) = self._get_services(request)
+        (sourcesvc, authsvc) = self._find_services(request)
 
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
@@ -143,7 +143,7 @@ class AuthServicePolicy(object):
         """ A list of headers which will delete appropriate cookies."""
         debug = self.debug
 
-        (sourcesvc, authsvc) = self._get_services(request)
+        (sourcesvc, authsvc) = self._find_services(request)
 
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
