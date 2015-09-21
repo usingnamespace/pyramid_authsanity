@@ -6,10 +6,11 @@ __pycache__
 .coverage.*
 coverage.xml
 coverage-*.xml
-nosetests-*.xml
+pytest-*.xml
 
 .tox/
 .eggs/
+.cache/
 
 /env/
 /build/
