@@ -53,8 +53,8 @@ class AuthServicePolicy(object):
         """ Returns the authenticated userid for this request. """
         debug = self.debug
 
-        authsvc = request.get_service(IAuthService)
-        sourcesvc = request.get_service(IAuthSourceService)
+        authsvc = request.find_service(IAuthService)
+        sourcesvc = request.find_service(IAuthSourceService)
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
         userid = authsvc.userid()
@@ -87,7 +87,7 @@ class AuthServicePolicy(object):
         effective_principals = [Everyone]
 
         userid = self.authenticated_userid(request)
-        authsvc = request.get_service(IAuthService)
+        authsvc = request.find_service(IAuthService)
 
         if userid is None:
             debug and self._log(
@@ -123,8 +123,8 @@ class AuthServicePolicy(object):
         """ Returns a list of headers that are to be set from the source service. """
         debug = self.debug
 
-        authsvc = request.get_service(IAuthService)
-        sourcesvc = request.get_service(IAuthSourceService)
+        authsvc = request.find_service(IAuthService)
+        sourcesvc = request.find_service(IAuthSourceService)
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
         value = {}
@@ -141,8 +141,8 @@ class AuthServicePolicy(object):
         """ A list of headers which will delete appropriate cookies."""
         debug = self.debug
 
-        authsvc = request.get_service(IAuthService)
-        sourcesvc = request.get_service(IAuthSourceService)
+        authsvc = request.find_service(IAuthService)
+        sourcesvc = request.find_service(IAuthSourceService)
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
         (_, ticket) = value = sourcesvc.get_value()
