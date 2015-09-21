@@ -6,10 +6,10 @@
 Session Authentication Source
 -----------------------------
 
-.. autofunction:: SessionAuthSourceFactory
+.. autofunction:: SessionAuthSourceInitializer
 
 Cookie Authentication Source
 ----------------------------
 
-.. autofunction:: CookieAuthSourceFactory
+.. autofunction:: CookieAuthSourceInitializer
 
