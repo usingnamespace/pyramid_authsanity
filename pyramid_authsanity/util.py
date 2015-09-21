@@ -1,3 +1,7 @@
+from .interfaces import (
+        IAuthService,
+        IAuthSourceService,
+        )
 
 def add_vary_callback(vary_by):
     def vary_add(request, response):
@@ -10,3 +14,9 @@ def InnerFactory(cls):
     def inner(context, request):
         return cls(context, request)
     return inner
+
+def _get_services(request):
+    sourcesvc = request.find_service(IAuthSourceService)
+    authsvc = request.find_service(IAuthService)
+
+    return (sourcesvc, authsvc)
