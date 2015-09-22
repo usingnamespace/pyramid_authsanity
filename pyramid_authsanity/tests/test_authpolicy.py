@@ -278,66 +278,61 @@ class DummyRequest(object):
         self.callbacks.append(callback)
 
 def fake_source_init(fake_value):
-    def fake_source_inner(context, request):
-        @implementer(IAuthSourceService)
-        class fake_source(object):
-            vary = ['Cookie']
-            def __init__(self, context, request):
-                self.value = fake_value
+    @implementer(IAuthSourceService)
+    class fake_source(object):
+        vary = ['Cookie']
+        def __init__(self, context, request):
+            self.value = fake_value
 
-            def get_value(self):
-                return self.value if self.value else [None, None]
+        def get_value(self):
+            return self.value if self.value else [None, None]
 
-            def headers_remember(self, value):
-                self.value = value
-                return []
+        def headers_remember(self, value):
+            self.value = value
+            return []
 
-            def headers_forget(self):
-                self.value = [None, None]
-                return []
+        def headers_forget(self):
+            self.value = [None, None]
+            return []
 
-        return fake_source(context, request)
-    return fake_source_inner
+    return fake_source
 
 
 def fake_auth_init(fake_userid=None, fake_groups=list(), valid_tickets=list()):
-    def fake_auth_innner(context, request):
+    @implementer(IAuthService)
+    class fake_auth(object):
 
-        @implementer(IAuthService)
-        class fake_auth(object):
+        def __init__(self, context, request):
+            self.authcomplete = False
+            self.ticketvalid = False
+            self._userid = fake_userid
+            self._groups = fake_groups
+            self.valid_tickets = valid_tickets
 
-            def __init__(self, context, request):
-                self.authcomplete = False
-                self.ticketvalid = False
-                self._userid = fake_userid
-                self._groups = fake_groups
-                self.valid_tickets = valid_tickets
-
-            def userid(self):
-                if not self.authcomplete:
-                    return NoAuthCompleted
+        def userid(self):
+            if not self.authcomplete:
+                return NoAuthCompleted
 
 
-                if not self.ticketvalid:
-                    return None
+            if not self.ticketvalid:
+                return None
 
-                return self._userid
+            return self._userid
 
-            def groups(self):
-                return self._groups
+        def groups(self):
+            return self._groups
 
-            def verify_ticket(self, principal, ticket):
-                self.authcomplete = True
-                if principal == self._userid and ticket in self.valid_tickets:
-                    self.ticketvalid = True
+        def verify_ticket(self, principal, ticket):
+            self.authcomplete = True
+            if principal == self._userid and ticket in self.valid_tickets:
+                self.ticketvalid = True
 
-            def add_ticket(self, principal, ticket):
-                if ticket not in self.valid_tickets:
-                    self.valid_tickets.append(ticket)
+        def add_ticket(self, principal, ticket):
+            if ticket not in self.valid_tickets:
+                self.valid_tickets.append(ticket)
 
-            def remove_ticket(self, ticket):
-                if ticket in self.valid_tickets:
-                    self.valid_tickets.remove(ticket)
+        def remove_ticket(self, ticket):
+            if ticket in self.valid_tickets:
+                self.valid_tickets.remove(ticket)
 
-        return fake_auth(context, request)
-    return fake_auth_innner
+    return fake_auth

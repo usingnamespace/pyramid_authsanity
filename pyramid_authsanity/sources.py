@@ -9,8 +9,6 @@ from .interfaces import (
         IAuthSourceService,
         )
 
-from .util import InnerFactory
-
 def SessionAuthSourceInitializer(value_key='sanity.'):
     """ An authentication source that uses the current session """
 
@@ -36,7 +34,7 @@ def SessionAuthSourceInitializer(value_key='sanity.'):
                 del self.session[value_key]
             return []
 
-    return InnerFactory(SessionAuthSource)
+    return SessionAuthSource
 
 
 def CookieAuthSourceInitializer(
@@ -93,5 +91,5 @@ def CookieAuthSourceInitializer(
         def headers_forget(self):
             return self.cookie.get_headers('', max_age=0)
 
-    return InnerFactory(CookieAuthSource)
+    return CookieAuthSource
 
