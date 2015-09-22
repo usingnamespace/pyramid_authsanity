@@ -211,8 +211,15 @@ class TestAuthServicePolicyIntegration(object):
             pyramid.testing.tearDown()
         request.addfinalizer(finish)
 
-    def _makeOne(self, debug=False, userid=None, ticket=None):
+    def _makeOne(self, debug=False, source=None, auth=None):
         from pyramid_authsanity import AuthServicePolicy
+
+        if source:
+            self.config.register_service_factory(source, iface=IAuthSourceService)
+
+        if auth:
+            self.config.register_service_factory(auth, iface=IAuthService)
+
         return AuthServicePolicy(debug=debug)
 
     def _makeOneRequest(self):
@@ -255,6 +262,120 @@ class TestAuthServicePolicyIntegration(object):
 
         assert sourcesvc == 'Source'
         assert authsvc == 'Auth'
+
+    def test_valid_source_ticket(self):
+        context = None
+        request = self._makeOneRequest()
+        source = fake_source_init(['test', 'valid'])
+        auth = fake_auth_init(fake_userid='test', valid_tickets=['valid'])
+
+        policy = self._makeOne(debug=True, source=source, auth=auth)
+
+        authuserid = policy.authenticated_userid(request)
+        assert authuserid == 'test'
+
+    def test_invalid_source_ticket(self):
+        context = None
+        request = self._makeOneRequest()
+        source = fake_source_init(['test', 'invalid'])
+        auth = fake_auth_init(fake_userid='test', valid_tickets=['valid'])
+
+        policy = self._makeOne(source=source, auth=auth)
+
+        authuserid = policy.authenticated_userid(request)
+        assert authuserid == None
+
+    def test_bad_auth_service(self):
+        context = None
+        request = self._makeOneRequest()
+        source = fake_source_init([None, None])
+
+        class BadAuth(object):
+            def __init__(self, context, request):
+                pass
+
+            def userid(self):
+                return NoAuthCompleted
+
+            def verify_ticket(self, principal, ticket):
+                pass
+
+        policy = self._makeOne(source=source, auth=BadAuth)
+
+        authuserid = policy.authenticated_userid(request)
+        assert authuserid == None
+
+    def test_no_user_effective_principals(self):
+        from pyramid.security import Everyone
+        context = None
+        request = self._makeOneRequest()
+        source = fake_source_init([None, None])
+        auth = fake_auth_init()
+
+        policy = self._makeOne(source=source, auth=auth)
+
+        groups = policy.effective_principals(request)
+
+        assert [Everyone] == groups
+
+    def test_user_bad_principal_effective_principals(self):
+        from pyramid.security import Everyone
+        context = None
+        request = self._makeOneRequest()
+        source = fake_source_init([Everyone, 'valid'])
+        auth = fake_auth_init(fake_userid=Everyone, valid_tickets=['valid'])
+
+        policy = self._makeOne(source=source, auth=auth)
+
+        groups = policy.effective_principals(request)
+
+        assert [Everyone] == groups
+
+    def test_effective_principals(self):
+        from pyramid.security import Everyone, Authenticated
+        context = None
+        request = self._makeOneRequest()
+        source = fake_source_init(['test', 'valid'])
+        auth = fake_auth_init(fake_userid='test', valid_tickets=['valid'])
+
+        policy = self._makeOne(source=source, auth=auth)
+
+        groups = policy.effective_principals(request)
+
+        assert [Everyone, Authenticated, 'test'] == groups
+
+
+    def test_remember(self):
+        context = None
+        request = self._makeOneRequest()
+        source = fake_source_init([None, None])
+        auth = fake_auth_init(fake_userid='test')
+
+        policy = self._makeOne(source=source, auth=auth)
+
+        headers = policy.remember(request, 'test')
+
+        authreq = request.find_service(IAuthService)
+
+        assert len(headers) == 0
+        assert len(authreq.valid_tickets) >= 1
+
+    def test_forget(self):
+        context = None
+        request = self._makeOneRequest()
+        source = fake_source_init(['test', 'valid'])
+        auth = fake_auth_init(fake_userid='test', valid_tickets=['valid'])
+
+        policy = self._makeOne(source=source, auth=auth)
+
+        authreq = request.find_service(IAuthService)
+
+        assert 'valid' in authreq.valid_tickets
+
+        headers = policy.forget(request)
+
+        assert len(headers) == 0
+        assert 'valid' not in authreq.valid_tickets
 
 class DummyLogger(object):
     def debug(self, log):
