@@ -147,7 +147,7 @@ class AuthServicePolicy(object):
 
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
-        (_, ticket) = value = sourcesvc.get_value()
+        (_, ticket) = sourcesvc.get_value()
         authsvc.remove_ticket(ticket)
 
         return sourcesvc.headers_forget()
