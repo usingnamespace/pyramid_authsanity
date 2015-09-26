@@ -30,9 +30,16 @@ Reference material for every public API exposed by pyramid_authsanity:
 
    api/*
 
+Narrative Documentation
+=======================
 
+Narrative documentation that describes how to use this library, with some
+examples.
 
+.. toctree::
+   :maxdepth: 1
 
+   narr/policy
 
 Other Matters
 =============
