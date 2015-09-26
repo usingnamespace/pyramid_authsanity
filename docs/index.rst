@@ -34,13 +34,14 @@ Reference material for every public API exposed by pyramid_authsanity:
 
 
 
-Other
-=====
+Other Matters
+=============
 
 .. toctree::
    :maxdepth: 2
 
    faq
+   license
 
 .. toctree::
    :maxdepth: 2
