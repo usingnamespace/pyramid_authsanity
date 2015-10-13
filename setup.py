@@ -15,9 +15,13 @@ requires = [
 ]
 
 tests_require = requires + [
-    'coverage',
     'pytest',
 ]
+
+coverage_require = tests_require + [
+    'coverage',
+    'pytest-cov',
+    ]
 
 docs_require = requires + [
     'sphinx',
@@ -54,6 +58,7 @@ setup(
     install_requires=requires,
     extras_require={
         'testing': tests_require,
+        'coverage': coverage_require,
         'docs': docs_require,
     },
     tests_require=tests_require,
