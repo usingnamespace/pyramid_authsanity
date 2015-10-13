@@ -45,8 +45,6 @@ def CookieAuthSourceInitializer(
          httponly=False,
          path="/",
          domains=None,
-         timeout=None,
-         reissue_time=None,
          debug=False,
          hashalg='sha512',
         ):
