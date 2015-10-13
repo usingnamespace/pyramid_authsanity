@@ -3,6 +3,9 @@ from .interfaces import (
         IAuthSourceService,
         )
 
+def int_or_none(x):
+    return int(x) if x != None else x
+
 def add_vary_callback(vary_by):
     def vary_add(request, response):
         vary = set(response.vary if response.vary is not None else [])
