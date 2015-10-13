@@ -16,10 +16,10 @@ from pyramid_authsanity.interfaces import (
         IAuthService,
         )
 
-from pyramid_authsanity import NoAuthCompleted
+from pyramid_authsanity.policy import NoAuthCompleted
 
 def test_clean_principal_invalid():
-    from pyramid_authsanity import _clean_principal
+    from pyramid_authsanity.policy import _clean_principal
     from pyramid.security import Everyone
 
     ret = _clean_principal(Everyone)
@@ -27,7 +27,7 @@ def test_clean_principal_invalid():
     assert ret == None
 
 def test_clean_principal_valid():
-    from pyramid_authsanity import _clean_principal
+    from pyramid_authsanity.policy import _clean_principal
 
     ret = _clean_principal('root')
 
@@ -35,7 +35,7 @@ def test_clean_principal_valid():
 
 class TestAuthServicePolicyInterface(object):
     def test_verify(self):
-        from pyramid_authsanity import AuthServicePolicy
+        from pyramid_authsanity.policy import AuthServicePolicy
         assert verifyClass(IAuthenticationPolicy, AuthServicePolicy)
         assert verifyObject(IAuthenticationPolicy, AuthServicePolicy())
 
@@ -235,7 +235,7 @@ class TestAuthServicePolicyIntegration(object):
         return request
 
     def test_include_me(self):
-        from pyramid_authsanity import AuthServicePolicy
+        from pyramid_authsanity.policy import AuthServicePolicy
         self.config.include('pyramid_authsanity')
         self.config.commit()
         introspector = self.config.registry.introspector
