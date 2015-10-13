@@ -6,6 +6,9 @@ from .interfaces import (
 def int_or_none(x):
     return int(x) if x != None else x
 
+def kw_from_settings(settings, from_prefix='authsanity.'):
+    return { k.replace(from_prefix, ''): v for k, v in settings.items() if k.startswith(from_prefix) }
+
 def add_vary_callback(vary_by):
     def vary_add(request, response):
         vary = set(response.vary if response.vary is not None else [])

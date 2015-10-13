@@ -48,6 +48,28 @@ def test_int_or_none_fail():
     with raises(ValueError):
         int_or_none('test')
 
+def test_kw_from_settings():
+    from pyramid_authsanity.util import kw_from_settings
+
+    settings = {
+            'authsanity.test': None,
+            'authsanity.other': 'other',
+            'notsanity.test': True,
+            }
+
+    kw = kw_from_settings(settings)
+
+    assert kw == {'test': None, 'other': 'other'}
+
+def test_kw_from_settings_custom():
+    from pyramid_authsanity.util import kw_from_settings
+
+    settings = {
+                'authsanity.cookie.test': True,
+                'authsanity.session.test': False,
+            }
+    kw = kw_from_settings(settings, 'authsanity.cookie.')
+    assert kw == { 'test': True }
 
 
 class DummyResponse(object):
