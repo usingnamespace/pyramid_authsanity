@@ -26,10 +26,10 @@ class IAuthService(Interface):
     member of. """
 
     def userid():
-        """ Return the current user id, None, or ``NoAuthCompleted``.
-        ``NoAuthCompleted`` is used when no attempts to verify a ticket has
-        been made yet and signifies that the authentication policy should
-        attempt to call ``verify_ticket`` """
+        """ Return the current user id, None, or raise an error. Raising an
+        error is used when no attempt to verify a ticket has been made yet and
+        signifies that the authentication policy should attempt to call
+        ``verify_ticket``"""
 
     def groups():
         """ Returns the groups for the current user, as a list. Including the

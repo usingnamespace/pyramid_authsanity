@@ -114,7 +114,7 @@ class TestAuthServicePolicy(object):
 
         class BadAuth(object):
             def userid(self):
-                return NoAuthCompleted
+                raise ValueError('No ticket verified')
 
             def verify_ticket(self, principal, ticket):
                 pass
@@ -295,7 +295,7 @@ class TestAuthServicePolicyIntegration(object):
                 pass
 
             def userid(self):
-                return NoAuthCompleted
+                raise ValueError('No ticket verification')
 
             def verify_ticket(self, principal, ticket):
                 pass
@@ -432,8 +432,7 @@ def fake_auth_init(fake_userid=None, fake_groups=list(), valid_tickets=list()):
 
         def userid(self):
             if not self.authcomplete:
-                return NoAuthCompleted
-
+                raise ValueError('No ticket verified.')
 
             if not self.ticketvalid:
                 return None

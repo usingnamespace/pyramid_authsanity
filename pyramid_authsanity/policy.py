@@ -54,9 +54,9 @@ class AuthServicePolicy(object):
         (sourcesvc, authsvc) = self._find_services(request)
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
-        userid = authsvc.userid()
-
-        if userid is NoAuthCompleted:
+        try:
+            userid = authsvc.userid()
+        except:
             debug and self._log('authentication has not yet been completed',
                     'authenticated_userid', request)
             (principal, ticket) = sourcesvc.get_value()
@@ -67,10 +67,11 @@ class AuthServicePolicy(object):
 
             # Verify the principal and the ticket, even if None
             authsvc.verify_ticket(principal, ticket)
-            # This should now return None
-            userid = authsvc.userid()
 
-            if userid is NoAuthCompleted:
+            try:
+                # This should now return None
+                userid = authsvc.userid()
+            except:
                 userid = None
 
         debug and self._log('authenticated_userid returning: %r' % (userid,),
