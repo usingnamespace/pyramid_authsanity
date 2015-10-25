@@ -411,7 +411,9 @@ class DummyRequest(object):
         class Session(dict):
             def invalidate(self):
                 self.clear()
-
+            
+            def new_csrf_token(self):
+                pass
 
         self.environ = environ or {}
         self.session = Session()

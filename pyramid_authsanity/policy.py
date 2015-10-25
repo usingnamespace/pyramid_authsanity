@@ -154,6 +154,7 @@ class AuthServicePolicy(object):
                 data = dict(request.session.items())
                 request.session.invalidate()
                 request.session.update(data)
+                request.session.new_csrf_token()
 
         return sourcesvc.headers_remember(value)
 
