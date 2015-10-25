@@ -58,8 +58,12 @@ class TestAuthServicePolicy(object):
         def find_services(request):
             return (source, auth)
 
+        def session_registered(request):
+            return False
+
         policy = AuthServicePolicy(debug=debug)
         policy._find_services = find_services
+        policy._session_registered = session_registered
         return policy
 
     def _makeOneRequest(self):
@@ -199,8 +203,9 @@ class TestAuthServicePolicy(object):
 class TestAuthServicePolicyIntegration(object):
     @pytest.fixture(autouse=True)
     def pyramid_config(self, request):
-        from pyramid.interfaces import IDebugLogger
+        from pyramid.interfaces import IDebugLogger, ISessionFactory
         self.config = pyramid.testing.setUp()
+        self.config.registry.registerUtility(lambda: None, ISessionFactory)
         self.config.include('pyramid_services')
         self.config.set_authorization_policy(ACLAuthorizationPolicy())
         self.logger = DummyLogger()
@@ -360,6 +365,21 @@ class TestAuthServicePolicyIntegration(object):
         assert len(headers) == 0
         assert len(authreq.valid_tickets) >= 1
 
+    def test_remember_same_user(self):
+        context = None
+        request = self._makeOneRequest()
+        source = fake_source_init(['test', 'valid_ticket'])
+        auth = fake_auth_init(fake_userid='test', valid_tickets=['valid_ticket'])
+
+        policy = self._makeOne(source=source, auth=auth)
+
+        headers = policy.remember(request, 'test')
+
+        authreq = request.find_service(IAuthService)
+
+        assert len(headers) == 0
+        assert len(authreq.valid_tickets) >= 1
+
     def test_forget(self):
         context = None
         request = self._makeOneRequest()
@@ -388,12 +408,19 @@ class DummyRequest(object):
     domain = 'example.net'
 
     def __init__(self, environ=None, session=None, registry=None, cookie=None):
+        class Session(dict):
+            def invalidate(self):
+                self.clear()
+
+
         self.environ = environ or {}
-        self.session = session or {}
+        self.session = Session()
+        self.session.update(session or {})
         self.registry = registry
         self.callbacks = []
         self.cookies = cookie or []
         self.context = None
+
 
     def add_response_callback(self, callback):
         self.callbacks.append(callback)

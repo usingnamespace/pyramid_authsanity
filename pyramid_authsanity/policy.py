@@ -14,6 +14,7 @@ from pyramid.security import (
 from .util import (
     add_vary_callback,
     _find_services,
+    _session_registered,
     )
 
 from zope.interface import implementer
@@ -29,6 +30,8 @@ def _clean_principal(princid):
         princid = None
     return princid
 
+_marker = object()
+
 @implementer(IAuthenticationPolicy)
 class AuthServicePolicy(object):
     def _log(self, msg, methodname, request):
@@ -40,6 +43,8 @@ class AuthServicePolicy(object):
             logger.debug(methodname + ': ' + msg)
 
     _find_services = staticmethod(_find_services) # Testing
+    _session_registered = staticmethod(_session_registered) # Testing
+    _have_session = _marker
 
     def __init__(self, debug=False):
         self.debug = debug
@@ -121,6 +126,11 @@ class AuthServicePolicy(object):
         """ Returns a list of headers that are to be set from the source service. """
         debug = self.debug
 
+        if self._have_session is _marker:
+            self._have_session = self._session_registered(request)
+
+        prev_userid = self.authenticated_userid(request)
+
         (sourcesvc, authsvc) = self._find_services(request)
 
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
@@ -133,11 +143,26 @@ class AuthServicePolicy(object):
 
         authsvc.add_ticket(principal, ticket)
 
+        # Clear the previous session
+        if self._have_session:
+            if prev_userid != principal:
+                request.session.invalidate()
+            else:
+                # We are logging in the same user that is already logged in, we
+                # still want to generate a new session, but we can keep the
+                # existing data
+                data = dict(request.session.items())
+                request.session.invalidate()
+                request.session.update(data)
+
         return sourcesvc.headers_remember(value)
 
     def forget(self, request):
         """ A list of headers which will delete appropriate cookies."""
         debug = self.debug
+
+        if self._have_session is _marker:
+            self._have_session = self._session_registered(request)
 
         (sourcesvc, authsvc) = self._find_services(request)
 
@@ -147,6 +172,10 @@ class AuthServicePolicy(object):
 
         debug and self._log('Forgetting ticket: %r' % (ticket,), 'forget', request)
         authsvc.remove_ticket(ticket)
+
+        # Clear the session by invalidating it
+        if self._have_session:
+            request.session.invalidate()
 
         return sourcesvc.headers_forget()
 

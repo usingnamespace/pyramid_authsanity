@@ -1,3 +1,7 @@
+from pyramid.interfaces import (
+    ISessionFactory,
+    )
+
 from .interfaces import (
     IAuthService,
     IAuthSourceService,
@@ -21,3 +25,9 @@ def _find_services(request):
     authsvc = request.find_service(IAuthService)
 
     return (sourcesvc, authsvc)
+
+def _session_registered(request):
+    registry = request.registry
+    factory = registry.queryUtility(ISessionFactory)
+
+    return (False if factory is None else True)
