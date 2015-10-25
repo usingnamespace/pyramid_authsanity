@@ -123,7 +123,8 @@ class TestCookieAuthSource(_TestAuthSource):
 
 
 class DummyRequest(object):
-    session = dict()
-    domain = 'example.net'
-    cookies = dict()
+    def __init__(self):
+        self.session = dict()
+        self.domain = 'example.net'
+        self.cookies = dict()
 
