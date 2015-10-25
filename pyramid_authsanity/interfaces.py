@@ -1,7 +1,7 @@
 from zope.interface import (
-        Attribute,
-        Interface,
-        )
+    Attribute,
+    Interface,
+    )
 
 class IAuthSourceService(Interface):
     """ Represents an authentication source. """

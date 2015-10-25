@@ -11,15 +11,10 @@ from pyramid.security import (
     Everyone,
     )
 
-from .interfaces import (
-        IAuthSourceService,
-        IAuthService,
-        )
-
 from .util import (
-        add_vary_callback,
-        _find_services,
-        )
+    add_vary_callback,
+    _find_services,
+    )
 
 from zope.interface import implementer
 
@@ -148,6 +143,8 @@ class AuthServicePolicy(object):
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
         (_, ticket) = sourcesvc.get_value()
+
+        debug and self._log('Forgetting ticket: %r' % (ticket,), 'forget', request)
         authsvc.remove_ticket(ticket)
 
         return sourcesvc.headers_forget()

@@ -5,12 +5,10 @@ from pyramid.settings import (
 
 from .interfaces import (
     IAuthSourceService,
-    IAuthService,
     )
 
 from .policy import (
     AuthServicePolicy,
-    NoAuthCompleted,
     )
 
 from .sources import (

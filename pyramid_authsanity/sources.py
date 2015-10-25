@@ -1,13 +1,12 @@
 from webob.cookies import (
-        SignedCookieProfile,
-        SignedSerializer,
-        )
+    SignedCookieProfile,
+    )
 
 from zope.interface import implementer
 
 from .interfaces import (
-        IAuthSourceService,
-        )
+    IAuthSourceService,
+    )
 
 def SessionAuthSourceInitializer(value_key='sanity.'):
     """ An authentication source that uses the current session """
@@ -38,16 +37,16 @@ def SessionAuthSourceInitializer(value_key='sanity.'):
 
 
 def CookieAuthSourceInitializer(
-         secret,
-         cookie_name='auth',
-         secure=False,
-         max_age=None,
-         httponly=False,
-         path="/",
-         domains=None,
-         debug=False,
-         hashalg='sha512',
-        ):
+    secret,
+    cookie_name='auth',
+    secure=False,
+    max_age=None,
+    httponly=False,
+    path="/",
+    domains=None,
+    debug=False,
+    hashalg='sha512',
+    ):
     """ An authentication source that uses a unique cookie """
 
     @implementer(IAuthSourceService)
@@ -62,16 +61,16 @@ def CookieAuthSourceInitializer(
                 self.domains.append(request.domain)
 
             self.cookie = SignedCookieProfile(
-                            secret,
-                            'authsanity',
-                            cookie_name,
-                            secure=secure,
-                            max_age=max_age,
-                            httponly=httponly,
-                            path=path,
-                            domains=domains,
-                            hashalg=hashalg,
-                            )
+                secret,
+                'authsanity',
+                cookie_name,
+                secure=secure,
+                max_age=max_age,
+                httponly=httponly,
+                path=path,
+                domains=domains,
+                hashalg=hashalg,
+                )
             # Bind the cookie to the current request
             self.cookie = self.cookie.bind(request)
 
