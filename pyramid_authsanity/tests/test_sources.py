@@ -37,25 +37,42 @@ class TestSessionAuthSource(_TestAuthSource):
 
         return obj(None, request)
 
-    def test_get_value_remember(self):
-        source = self._makeOne()
-        headers = source.headers_remember("test")
+    def test_remember(self):
+        request = DummyRequest()
+        source = self._makeOne(request=request)
+        source.headers_remember("test")
+
+        assert request.session['sanity.value'] == "test"
+
+    def test_forget(self):
+        request = DummyRequest()
+        request.session['sanity.value'] = "test"
+        source = self._makeOne(request=request)
+        headers = source.headers_forget()
+
+        assert 'sanity.value' not in request.session
+
+    def test_get_value_from_session(self):
+        request = DummyRequest()
+        request.session['sanity.value'] = "test"
+        source = self._makeOne(request=request)
         val = source.get_value()
 
         assert val == "test"
 
-    def test_get_value_after_forget(self):
-        source = self._makeOne()
-        headers = source.headers_remember("test")
+    def test_get_previous_value_after_remember(self):
+        request = DummyRequest()
+        source = self._makeOne(request=request)
         val = source.get_value()
 
-        assert val == "test"
+        assert val == [None, None]
 
-        headers_remove = source.headers_forget()
+        source.headers_remember("test")
 
         val2 = source.get_value()
 
         assert val2 == [None, None]
+        assert request.session['sanity.value'] == "test"
 
 class TestCookieAuthSource(_TestAuthSource):
     def _makeOne(self, request=None):

@@ -20,15 +20,25 @@ def SessionAuthSourceInitializer(value_key='sanity.'):
         def __init__(self, context, request):
             self.request = request
             self.session = request.session
+            self.cur_val = None
 
         def get_value(self):
-            return self.session.get(value_key, [None, None])
+            if self.cur_val is None:
+                self.cur_val = self.session.get(value_key, [None, None])
+
+            return self.cur_val
 
         def headers_remember(self, value):
+            if self.cur_val is None:
+                self.cur_val = self.session.get(value_key, [None, None])
+
             self.session[value_key] = value
             return []
 
         def headers_forget(self):
+            if self.cur_val is None:
+                self.cur_val = self.session.get(value_key, [None, None])
+
             if value_key in self.session:
                 del self.session[value_key]
             return []
@@ -47,7 +57,7 @@ def CookieAuthSourceInitializer(
     debug=False,
     hashalg='sha512',
     ):
-    """ An authentication source that uses a unique cookie """
+    """ An authentication source that uses a unique cookie. """
 
     @implementer(IAuthSourceService)
     class CookieAuthSource(object):
