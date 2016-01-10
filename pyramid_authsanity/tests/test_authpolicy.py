@@ -365,6 +365,25 @@ class TestAuthServicePolicyIntegration(object):
         assert len(headers) == 0
         assert len(authreq.valid_tickets) >= 1
 
+    def test_remember_value_json_serializable(self):
+        context = None
+        request = self._makeOneRequest()
+        source = fake_source_init([None, None])
+        auth = fake_auth_init(fake_userid='test')
+
+        policy = self._makeOne(source=source, auth=auth)
+
+        headers = policy.remember(request, 'test')
+
+        authreq = request.find_service(IAuthService)
+        sourcereq = request.find_service(IAuthSourceService)
+
+        assert len(headers) == 0
+        assert len(authreq.valid_tickets) >= 1
+        import json
+
+        assert json.dumps(sourcereq.value)
+
     def test_remember_same_user(self):
         context = None
         request = self._makeOneRequest()
