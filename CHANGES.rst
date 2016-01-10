@@ -1,3 +1,9 @@
+0.1.0a2
+=======
+
+- Bert was asleep at the keyboard, the fix below is now actually properly fixed
+  by decoding to ascii, which is safe because it is base64.
+
 0.1.0a1
 =======
 
