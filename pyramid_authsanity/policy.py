@@ -137,7 +137,7 @@ class AuthServicePolicy(object):
 
         value = {}
         value['principal'] = principal
-        value['ticket'] = ticket = base64.urlsafe_b64encode(os.urandom(32)).rstrip(b"=")
+        value['ticket'] = ticket = str(base64.urlsafe_b64encode(os.urandom(32)).rstrip(b"="))
 
         debug and self._log('Remember principal: %r, ticket: %r' % (principal, ticket), 'remember', request)
 
