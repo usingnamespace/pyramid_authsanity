@@ -1,3 +1,7 @@
+import sys
+
+import pytest
+
 from collections import Iterable
 
 from pyramid_authsanity.interfaces import IAuthSourceService
@@ -91,6 +95,13 @@ class TestCookieAuthSource(_TestAuthSource):
 
         for h in headers:
             assert 'auth' in h[1]
+
+    @pytest.mark.skipif(sys.version_info < (3,0),
+                    reason="json.dumps() doesn't like binary data on Python 3.x")
+    def test_get_header_remember_binary(self):
+        source = self._makeOne()
+        with pytest.raises(TypeError):
+            headers = source.headers_remember(b"test")
 
     def test_get_header_forget(self):
         source = self._makeOne()
