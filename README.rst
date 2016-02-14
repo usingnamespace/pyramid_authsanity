@@ -2,17 +2,17 @@
 pyramid_authsanity
 ==================
 
-An sane defaults auth policy for the `Pyramid Web Framework
-<https://docs.pylonsproject.org/projects/pyramid>`__. that works with `Michael
-Merickel's <http://michael.merickel.org>`__ absolutely fantastic
-`pyramid_services <https://github.com/mmerickel/pyramid_services>`__ to provide
-an easy to use authorization policy that incorporates web security best
-practices.
+An auth policy for the `Pyramid Web Framework
+<https://trypyramid.com>`_ with sane defaults that works with `Michael
+Merickel's <http://michael.merickel.org>`_ absolutely fantastic
+`pyramid_services <https://github.com/mmerickel/pyramid_services>`_.
+Provides an easy to use authorization policy that incorporates web security
+best practices.
 
 Installation
 ============
 
-Install from `PyPI <https://pypi.python.org/pyramid_authsanity>`__ using
+Install from `PyPI <https://pypi.python.org/pypi/pyramid_authsanity>`_ using
 ``pip`` or ``easy_install`` inside a virtual environment.
 
 ::
