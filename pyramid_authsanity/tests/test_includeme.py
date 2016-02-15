@@ -3,27 +3,17 @@ import pytest
 from pyramid.authorization import ACLAuthorizationPolicy
 import pyramid.testing
 
-from zope.interface import (
-    Interface,
-    implementedBy,
-    providedBy,
-)
-
-from zope.interface.verify import (
-        verifyClass,
-        verifyObject
-        )
+from zope.interface.verify import verifyClass
 
 from pyramid_services import find_service_factory
 
 from pyramid_authsanity.interfaces import (
-        IAuthSourceService,
-        )
+    IAuthSourceService,
+    )
 
 class TestAuthServicePolicyIntegration(object):
     @pytest.fixture(autouse=True)
     def pyramid_config(self, request):
-        from pyramid.interfaces import IDebugLogger
         self.config = pyramid.testing.setUp()
         self.config.set_authorization_policy(ACLAuthorizationPolicy())
 
@@ -50,7 +40,7 @@ class TestAuthServicePolicyIntegration(object):
 
     def test_include_me_cookie_no_secret(self):
         settings = {'authsanity.source': 'cookie'}
-        
+
         with pytest.raises(RuntimeError):
             self._makeOne(settings)
 
@@ -64,7 +54,8 @@ class TestAuthServicePolicyIntegration(object):
         auth_policy = introspector.get('authentication policy', None)
 
         assert isinstance(auth_policy['policy'], AuthServicePolicy)
-        assert verifyClass(IAuthSourceService, find_service_factory(self.config, IAuthSourceService))
+        assert verifyClass(IAuthSourceService, find_service_factory(
+            self.config, IAuthSourceService))
 
     def test_include_me_session(self):
         from pyramid_authsanity.policy import AuthServicePolicy
@@ -76,4 +67,5 @@ class TestAuthServicePolicyIntegration(object):
         auth_policy = introspector.get('authentication policy', None)
 
         assert isinstance(auth_policy['policy'], AuthServicePolicy)
-        assert verifyClass(IAuthSourceService, find_service_factory(self.config, IAuthSourceService))
+        assert verifyClass(IAuthSourceService, find_service_factory(
+            self.config, IAuthSourceService))
