@@ -14,7 +14,7 @@ from zope.interface.verify import (
         verifyObject
         )
 
-from pyramid_services import IServiceClassifier
+from pyramid_services import find_service_factory
 
 from pyramid_authsanity.interfaces import (
         IAuthSourceService,
@@ -77,18 +77,3 @@ class TestAuthServicePolicyIntegration(object):
 
         assert isinstance(auth_policy['policy'], AuthServicePolicy)
         assert verifyClass(IAuthSourceService, find_service_factory(self.config, IAuthSourceService))
-
-
-def find_service_factory(
-    config,
-    iface=Interface,
-    ):
-
-    context_iface = providedBy(None)
-    svc_types = (IServiceClassifier, context_iface)
-
-    adapters = config.registry.adapters
-    svc_factory = adapters.lookup(svc_types, iface, name='')
-    if svc_factory is None:
-        raise ValueError('could not find registered service')
-    return svc_factory
