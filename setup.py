@@ -11,7 +11,7 @@ except IOError:
 requires = [
     'pyramid',
     'zope.interface',
-    'pyramid_services'
+    'pyramid_services>=0.3'
 ]
 
 tests_require = requires + [
