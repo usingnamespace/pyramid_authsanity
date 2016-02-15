@@ -1,3 +1,12 @@
+0.1.0a3
+=======
+
+- Remove Python 3.2 support
+
+- Fix failing tests using pyramid_services >= 0.4 by requiring at least
+  pyramid_services 0.3 because it contains the find_service_factory function
+  utilized by the test.
+
 0.1.0a2
 =======
 
