@@ -99,4 +99,3 @@ def CookieAuthSourceInitializer(
             return self.cookie.get_headers('', max_age=0)
 
     return CookieAuthSource
-
