@@ -11,7 +11,7 @@ def int_or_none(x):
     return int(x) if x is not None else x
 
 def kw_from_settings(settings, from_prefix='authsanity.'):
-    return dict((k.replace(from_prefix, ''), v) for (k, v) in settings.items() if k.startswith(from_prefix))
+    return { k.replace(from_prefix, ''): v for k, v in settings.items() if k.startswith(from_prefix) }
 
 def add_vary_callback(vary_by):
     def vary_add(request, response):
