@@ -71,8 +71,10 @@ pages:
     script:
         - apt-get install make
         - pip install tox
-        - TOXENV=doc tox
+        - TOXENV=docs tox
         - mv .tox/docs/html public
     artifacts:
         paths:
             - public
+    tags:
+        - docker
