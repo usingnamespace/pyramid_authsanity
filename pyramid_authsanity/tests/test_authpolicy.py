@@ -182,6 +182,8 @@ class TestAuthServicePolicy(object):
 
         assert len(headers) == 0
         assert len(auth.valid_tickets) >= 1
+        assert isinstance(source.value, list)
+        assert len(source.value) == 2
 
     def test_forget(self):
         context = None
