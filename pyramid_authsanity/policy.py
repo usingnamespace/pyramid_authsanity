@@ -156,7 +156,7 @@ class AuthServicePolicy(object):
                 request.session.update(data)
                 request.session.new_csrf_token()
 
-        return sourcesvc.headers_remember(value)
+        return sourcesvc.headers_remember([principal, ticket])
 
     def forget(self, request):
         """ A list of headers which will delete appropriate cookies."""
