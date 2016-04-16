@@ -65,3 +65,14 @@ test_cov:
         - apt-get install -y python3.5 python2.7 python-pip
         - pip install tox
         - TOXENV=py2-cover,py3-cover,coverage tox
+
+pages:
+    image: python:3.5
+    script:
+        - apt-get install make
+        - pip install tox
+        - TOXENV=doc tox
+        - mv .tox/docs/html public
+    artifacts:
+        paths:
+            - public
