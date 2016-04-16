@@ -19,8 +19,6 @@ from .util import (
 
 from zope.interface import implementer
 
-NoAuthCompleted = object()
-
 def _clean_principal(princid):
     """ Utility function that cleans up the passed in principal
     This can easily also be extended for example to make sure that certain
@@ -179,4 +177,3 @@ class AuthServicePolicy(object):
             request.session.invalidate()
 
         return sourcesvc.headers_forget()
-
