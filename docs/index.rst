@@ -3,7 +3,7 @@ pyramid_authsanity
 
 pyramid_authsanity is an authentication policy for the `Pyramid Web Framework
 <https://docs.pylonsproject.org/projects/pyramid>`__ that strives to make it
-easier to write a seure authentication policy that follows web best practices.
+easier to write a secure authentication policy that follows web best practices.
 
 - Uses tickets to allow sessions to be prematurely ended. Don't depend on the
   expiration of a cookie for example, instead have the ability to terminate
