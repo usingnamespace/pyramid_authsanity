@@ -28,7 +28,9 @@ def _clean_principal(princid):
         princid = None
     return princid
 
+
 _marker = object()
+
 
 @implementer(IAuthenticationPolicy)
 class AuthServicePolicy(object):

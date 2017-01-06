@@ -45,6 +45,7 @@ def init_session_source(config, settings):
 
     config.register_service_factory(SessionAuthSourceInitializer(**kw), iface=IAuthSourceService)
 
+
 default_sources = {
     'cookie': init_cookie_source,
     'session': init_session_source,
