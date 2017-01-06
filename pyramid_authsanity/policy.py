@@ -72,7 +72,7 @@ class AuthServicePolicy(object):
             authsvc.verify_ticket(principal, ticket)
 
             try:
-                # This should now return None
+                # This should now return None or the userid
                 userid = authsvc.userid()
             except:
                 userid = None
