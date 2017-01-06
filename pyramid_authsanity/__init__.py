@@ -25,7 +25,7 @@ default_settings = (
     ('source', str, ''),
     ('cookie.cookie_name', str, 'auth'),
     ('cookie.max_age', int_or_none, None),
-    ('cookie.httponly', asbool, False),
+    ('cookie.httponly', asbool, True),
     ('cookie.path', str, '/'),
     ('cookie.domains', aslist, []),
     ('cookie.debug', asbool, False),
