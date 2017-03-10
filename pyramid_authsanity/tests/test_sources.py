@@ -109,8 +109,9 @@ class TestCookieAuthSource(_TestAuthSource):
 
         assert isinstance(headers, Iterable)
 
+        # Should set an empty cookie
         for h in headers:
-            assert 'auth' in h[1]
+            assert h[1].startswith("auth=;")
 
     def test_get_value_cookie(self):
         request = DummyRequest()
@@ -123,6 +124,14 @@ class TestCookieAuthSource(_TestAuthSource):
     def test_get_value_bad_cookie(self):
         request = DummyRequest()
         request.cookies['auth'] = "jxxxxxxxfFFc3Qcx5O84h4u8NSZIi51xVMYs_HyP94BO1aXGZpME_LJ1UZgfdAMJDoaGaLCt_y-x6FSBh3ZKDyJ0ZXN0Ig"
+        source = self._makeOne(request=request)
+        val = source.get_value()
+
+        assert val == [None, None]
+
+    def test_get_value_empty_cookie(self):
+        request = DummyRequest()
+        request.cookies['auth'] = ""
         source = self._makeOne(request=request)
         val = source.get_value()
 
