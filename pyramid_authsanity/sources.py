@@ -96,6 +96,6 @@ def CookieAuthSourceInitializer(
             return self.cookie.get_headers(value, domains=self.domains)
 
         def headers_forget(self):
-            return self.cookie.get_headers('', max_age=0)
+            return self.cookie.get_headers(None, max_age=0)
 
     return CookieAuthSource
