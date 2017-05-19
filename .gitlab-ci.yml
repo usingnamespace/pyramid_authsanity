@@ -26,13 +26,6 @@ test:pypy3:
         - pip install tox
         - TOXENV=pypy3 tox
 
-test:3.3:
-    <<: *test
-    image: python:3.3
-    script:
-        - pip install tox
-        - TOXENV=py33 tox
-
 test:3.4:
     <<: *test
     image: python:3.4
@@ -46,6 +39,13 @@ test:3.5:
     script:
         - pip install tox
         - TOXENV=py35 tox
+
+test:3.6:
+    <<: *test
+    image: python:3.6
+    script:
+        - pip install tox
+        - TOXENV=py36 tox
 
 test:pep8:
     <<: *test
