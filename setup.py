@@ -30,11 +30,11 @@ docs_require = requires + [
 
 setup(
     name='pyramid_authsanity',
-    version='0.1.0a4',
+    version='1.0.0',
     description='An auth policy for the Pyramid Web Framework with sane defaults.',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Framework :: Pyramid',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: ISC License (ISCL)',
