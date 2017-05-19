@@ -61,8 +61,6 @@ setup(
         'coverage': coverage_require,
         'docs': docs_require,
     },
-    tests_require=tests_require,
-    test_suite='pyramid_authsanity',
     entry_points={
     },
 )
