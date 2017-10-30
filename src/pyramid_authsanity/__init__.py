@@ -24,6 +24,7 @@ from .util import (
 
 default_settings = (
     ('source', str, ''),
+    ('debug', asbool, False),
     ('cookie.cookie_name', str, 'auth'),
     ('cookie.max_age', int_or_none, None),
     ('cookie.httponly', asbool, True),
@@ -108,4 +109,8 @@ def includeme(config):
     if settings['authsanity.source'] in default_sources:
         default_sources[settings['authsanity.source']](config, config.registry.settings)
 
-    config.set_authentication_policy(AuthServicePolicy())
+    config.set_authentication_policy(
+        AuthServicePolicy(
+            debug=settings['authsanity.debug']
+        )
+    )
