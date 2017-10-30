@@ -27,7 +27,7 @@ docs_require = requires + [
 
 setup(
     name='pyramid_authsanity',
-    version='2.0.0dev0',
+    version='1.1.0',
     description='An auth policy for the Pyramid Web Framework with sane defaults.',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
