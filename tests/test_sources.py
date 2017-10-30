@@ -158,10 +158,61 @@ class TestCookieAuthSource(_TestAuthSource):
 
         assert val == ['user1', 'ticket1']
 
+class TestHeaderAuthSource(_TestAuthSource):
+    def _makeOne(self, request=None):
+        obj = sources.HeaderAuthSourceInitializer('seekrit')
+
+        if request is None:
+            request = DummyRequest()
+
+        return obj(None, request)
+
+    def test_get_header_remember(self):
+        source = self._makeOne()
+        headers = source.headers_remember("test")
+
+        assert isinstance(headers, Iterable)
+        assert len(headers) >= 1
+
+        for h in headers:
+            assert 'Authorization' in h[0]
+
+    @pytest.mark.skipif(
+        sys.version_info < (3, 0),
+        reason="json.dumps() doesn't like binary data on Python 3.x"
+    )
+    def test_get_header_remember_binary(self):
+        source = self._makeOne()
+        with pytest.raises(TypeError):
+            source.headers_remember(b"test")
+
+    def test_get_header_forget(self):
+        source = self._makeOne()
+        headers = source.headers_forget()
+
+        assert isinstance(headers, Iterable)
+        assert len(headers) == 0
+
+    def test_get_value_bad_authorization(self):
+        request = DummyRequest()
+        request.authorization = ('Bearer', 'thisisinvalid')
+        source = self._makeOne(request=request)
+        val = source.get_value()
+
+        assert val == [None, None]
+
+    def test_get_value_authorization(self):
+        request = DummyRequest()
+        request.authorization = ('Bearer', 'zASow9lpNp6cr7FirG4kV6vQym8i75kLPZ7orcPMaemV4iaf92P-DTR0om_h0trImTEOXyv514obhbcB-3fvKyJ0ZXN0Ig')
+        source = self._makeOne(request=request)
+        val = source.get_value()
+
+        assert val == "test"
+
 
 class DummyRequest(object):
     def __init__(self):
         self.session = dict()
         self.domain = 'example.net'
         self.cookies = dict()
-
+        self.authorization = None
