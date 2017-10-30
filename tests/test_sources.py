@@ -52,7 +52,7 @@ class TestSessionAuthSource(_TestAuthSource):
         request = DummyRequest()
         request.session['sanity.value'] = "test"
         source = self._makeOne(request=request)
-        headers = source.headers_forget()
+        source.headers_forget()
 
         assert 'sanity.value' not in request.session
 
@@ -96,12 +96,14 @@ class TestCookieAuthSource(_TestAuthSource):
         for h in headers:
             assert 'auth' in h[1]
 
-    @pytest.mark.skipif(sys.version_info < (3,0),
-                    reason="json.dumps() doesn't like binary data on Python 3.x")
+    @pytest.mark.skipif(
+        sys.version_info < (3, 0),
+        reason="json.dumps() doesn't like binary data on Python 3.x"
+    )
     def test_get_header_remember_binary(self):
         source = self._makeOne()
         with pytest.raises(TypeError):
-            headers = source.headers_remember(b"test")
+            source.headers_remember(b"test")
 
     def test_get_header_forget(self):
         source = self._makeOne()

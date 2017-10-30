@@ -12,6 +12,7 @@ from .interfaces import (
     IAuthSourceService,
 )
 
+
 def SessionAuthSourceInitializer(
     value_key='sanity.'
 ):
