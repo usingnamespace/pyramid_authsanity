@@ -1,3 +1,5 @@
+from pyramid.compat import native_
+
 from webob.cookies import (
     JSONSerializer,
     SignedCookieProfile,
@@ -109,6 +111,8 @@ def HeaderAuthSourceInitializer(
     secret,
     salt='sanity.header.'
 ):
+    """ An authentication source that uses the Authorization header. """
+
     @implementer(IAuthSourceService)
     class HeaderAuthSource(object):
         vary = ['Authorization']
@@ -149,7 +153,7 @@ def HeaderAuthSourceInitializer(
                 self.cur_val = None
 
             token = self._create_authorization(value)
-            auth_info = str(b'Bearer ' + token, 'latin-1', 'strict')
+            auth_info = native_(b'Bearer ' + token, 'latin-1', 'strict')
             return [('Authorization', auth_info)]
 
         def headers_forget(self):
