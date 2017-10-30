@@ -13,3 +13,7 @@ Cookie Authentication Source
 
 .. autofunction:: CookieAuthSourceInitializer
 
+Authorization Header Authentication Source
+------------------------------------------
+
+.. autofunction:: HeaderAuthSourceInitializer
