@@ -16,9 +16,6 @@ requires = [
 
 tests_require = requires + [
     'pytest',
-]
-
-coverage_require = tests_require + [
     'coverage',
     'pytest-cov',
     ]
@@ -58,7 +55,6 @@ setup(
     install_requires=requires,
     extras_require={
         'testing': tests_require,
-        'coverage': coverage_require,
         'docs': docs_require,
     },
     entry_points={

@@ -1,0 +1,15 @@
+[run]
+parallel = true
+source =
+    pyramid_authsanity
+    tests
+omit =
+
+[paths]
+source =
+    src/pyramid_authsanity
+    */site-packages/pyramid_authsanity
+
+[report]
+show_missing = true
+precision = 2

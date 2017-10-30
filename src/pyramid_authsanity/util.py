@@ -7,11 +7,18 @@ from .interfaces import (
     IAuthSourceService,
     )
 
+
 def int_or_none(x):
     return int(x) if x is not None else x
 
+
 def kw_from_settings(settings, from_prefix='authsanity.'):
-    return { k.replace(from_prefix, ''): v for k, v in settings.items() if k.startswith(from_prefix) }
+    return {
+        k.replace(from_prefix, ''): v
+        for k, v in settings.items()
+        if k.startswith(from_prefix)
+    }
+
 
 def add_vary_callback(vary_by):
     def vary_add(request, response):
@@ -20,11 +27,13 @@ def add_vary_callback(vary_by):
         response.vary = list(vary)
     return vary_add
 
+
 def _find_services(request):
     sourcesvc = request.find_service(IAuthSourceService)
     authsvc = request.find_service(IAuthService)
 
     return (sourcesvc, authsvc)
+
 
 def _session_registered(request):
     registry = request.registry

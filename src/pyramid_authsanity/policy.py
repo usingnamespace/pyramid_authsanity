@@ -19,6 +19,7 @@ from .util import (
 
 from zope.interface import implementer
 
+
 def _clean_principal(princid):
     """ Utility function that cleans up the passed in principal
     This can easily also be extended for example to make sure that certain
@@ -42,8 +43,8 @@ class AuthServicePolicy(object):
             methodname = classname + '.' + methodname
             logger.debug(methodname + ': ' + msg)
 
-    _find_services = staticmethod(_find_services) # Testing
-    _session_registered = staticmethod(_session_registered) # Testing
+    _find_services = staticmethod(_find_services)  # Testing
+    _session_registered = staticmethod(_session_registered)  # Testing
     _have_session = _marker
 
     def __init__(self, debug=False):
@@ -61,9 +62,12 @@ class AuthServicePolicy(object):
 
         try:
             userid = authsvc.userid()
-        except:
-            debug and self._log('authentication has not yet been completed',
-                    'authenticated_userid', request)
+        except Exception:
+            debug and self._log(
+                'authentication has not yet been completed',
+                'authenticated_userid',
+                request
+            )
             (principal, ticket) = sourcesvc.get_value()
 
             debug and self._log(
@@ -76,11 +80,14 @@ class AuthServicePolicy(object):
             try:
                 # This should now return None or the userid
                 userid = authsvc.userid()
-            except:
+            except Exception:
                 userid = None
 
-        debug and self._log('authenticated_userid returning: %r' % (userid,),
-                'authenticated_userid', request)
+        debug and self._log(
+            'authenticated_userid returning: %r' % (userid,),
+            'authenticated_userid',
+            request
+        )
 
         return userid
 
@@ -137,9 +144,19 @@ class AuthServicePolicy(object):
 
         value = {}
         value['principal'] = principal
-        value['ticket'] = ticket = base64.urlsafe_b64encode(os.urandom(32)).rstrip(b"=").decode('ascii')
+        value['ticket'] = ticket = (
+            base64.urlsafe_b64encode(
+                os.urandom(32)
+            ).
+            rstrip(b"=").
+            decode('ascii')
+        )
 
-        debug and self._log('Remember principal: %r, ticket: %r' % (principal, ticket), 'remember', request)
+        debug and self._log(
+            'Remember principal: %r, ticket: %r' % (principal, ticket),
+            'remember',
+            request
+        )
 
         authsvc.add_ticket(principal, ticket)
 

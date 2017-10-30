@@ -69,3 +69,22 @@ class TestAuthServicePolicyIntegration(object):
         assert isinstance(auth_policy['policy'], AuthServicePolicy)
         assert verifyClass(IAuthSourceService, find_service_factory(
             self.config, IAuthSourceService))
+
+    def test_include_me_header_with_secret(self):
+        from pyramid_authsanity.policy import AuthServicePolicy
+        settings = {'authsanity.source': 'header', 'authsanity.secret': 'sekrit'}
+
+        self._makeOne(settings)
+        self.config.commit()
+        introspector = self.config.registry.introspector
+        auth_policy = introspector.get('authentication policy', None)
+
+        assert isinstance(auth_policy['policy'], AuthServicePolicy)
+        assert verifyClass(IAuthSourceService, find_service_factory(
+            self.config, IAuthSourceService))
+
+    def test_include_me_header_no_secret(self):
+        settings = {'authsanity.source': 'header'}
+
+        with pytest.raises(RuntimeError):
+            self._makeOne(settings)

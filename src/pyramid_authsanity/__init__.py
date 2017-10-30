@@ -12,8 +12,9 @@ from .policy import (
     )
 
 from .sources import (
-    SessionAuthSourceInitializer,
     CookieAuthSourceInitializer,
+    HeaderAuthSourceInitializer,
+    SessionAuthSourceInitializer,
     )
 
 from .util import (
@@ -32,24 +33,54 @@ default_settings = (
     ('session.value_key', str, 'sanity.'),
 )
 
+
 def init_cookie_source(config, settings):
     if 'authsanity.secret' not in settings:
         raise RuntimeError('authsanity.secret is required for cookie based storage')
 
     kw = kw_from_settings(settings, 'authsanity.cookie.')
 
-    config.register_service_factory(CookieAuthSourceInitializer(settings['authsanity.secret'], **kw), iface=IAuthSourceService)
+    config.register_service_factory(
+        CookieAuthSourceInitializer(
+            settings['authsanity.secret'],
+            **kw
+        ),
+        iface=IAuthSourceService
+    )
+
 
 def init_session_source(config, settings):
     kw = kw_from_settings(settings, 'authsanity.session.')
 
-    config.register_service_factory(SessionAuthSourceInitializer(**kw), iface=IAuthSourceService)
+    config.register_service_factory(
+        SessionAuthSourceInitializer(**kw),
+        iface=IAuthSourceService
+    )
+
+
+def init_authorization_header_source(config, settings):
+    if 'authsanity.secret' not in settings:
+        raise RuntimeError(
+            'authsanity.secret is required for Authorization header source'
+        )
+
+    kw = kw_from_settings(settings, 'authsanity.header.')
+
+    config.register_service_factory(
+        HeaderAuthSourceInitializer(
+            settings['authsanity.secret'],
+            **kw
+        ),
+        iface=IAuthSourceService
+    )
 
 
 default_sources = {
     'cookie': init_cookie_source,
     'session': init_session_source,
+    'header': init_authorization_header_source,
 }
+
 
 # Stolen from pyramid_debugtoolbar
 def parse_settings(settings):

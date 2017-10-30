@@ -3,6 +3,7 @@ from zope.interface import (
     Interface,
     )
 
+
 class IAuthSourceService(Interface):
     """ Represents an authentication source. """
 
@@ -19,6 +20,7 @@ class IAuthSourceService(Interface):
     def headers_forget():
         """ Returns any and all headers for forgetting the current requests
         value. """
+
 
 class IAuthService(Interface):
     """ Represents an authentication service. This service verifies that the
