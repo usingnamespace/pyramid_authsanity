@@ -56,16 +56,10 @@ test:pep8:
 
 test_cov:
     <<: *test
-    image: ubuntu:14.04
+    image: quay.io/pypa/manylinux1_x86_64:latest
     script:
-        - apt-get update -y
-        - apt-get install -y software-properties-common
-        - add-apt-repository -y ppa:fkrull/deadsnakes
-        - apt-get update -y
-        - apt-get upgrade -y
-        - apt-get install -y python3.5 python2.7 python-pip
-        - pip install tox
-        - TOXENV=py27,py35,coverage tox
+        - PATH=/opt/python/cp27-cp27mu/bin/:/opt/python/cp36-cp36m/bin/ pip install tox
+        - PATH=/opt/python/cp27-cp27mu/bin/:/opt/python/cp36-cp36m/bin/ TOXENV=py27,py36,coverage tox
 
 pages:
     image: python:3.6
