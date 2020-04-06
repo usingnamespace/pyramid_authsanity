@@ -21,7 +21,7 @@ key for the HMAC is not made public.
 session
 -------
 
-This source stores the information required for the authentiation in the
+This source stores the information required for the authentication in the
 Pyramid session, this requires that a session is available in the application
 as `request.session`. Since there is no requirement for a Pyramid application
 to have a registered session, pyramid_authsanity decided to not make this the
