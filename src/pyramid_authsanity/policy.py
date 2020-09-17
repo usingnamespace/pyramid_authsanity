@@ -161,7 +161,7 @@ class AuthServicePolicy(object):
         authsvc.add_ticket(principal, ticket)
 
         # Clear the previous session
-        if self._have_session:
+        if prev_userid is not None and self._have_session:
             if prev_userid != principal:
                 request.session.invalidate()
             else:
