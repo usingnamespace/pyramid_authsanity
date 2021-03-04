@@ -1,5 +1,3 @@
-from pyramid.compat import native_
-
 from webob.cookies import (
     JSONSerializer,
     SignedCookieProfile,
@@ -129,6 +127,13 @@ def HeaderAuthSourceInitializer(
                 serializer=serializer,
                 )
 
+        def _native(s, encoding='latin-1', errors='strict'):
+            """If ``s`` is an instance of ``str``, return
+            ``s``, otherwise return ``str(s, encoding, errors)``"""
+            if isinstance(s, str):
+                return s
+            return str(s, encoding, errors)
+
         def _get_authorization(self):
             try:
                 type, token = self.request.authorization
@@ -154,7 +159,7 @@ def HeaderAuthSourceInitializer(
                 self.cur_val = None
 
             token = self._create_authorization(value)
-            auth_info = native_(b'Bearer ' + token, 'latin-1', 'strict')
+            auth_info = self._native(b'Bearer ' + token, 'latin-1', 'strict')
             return [('Authorization', auth_info)]
 
         def headers_forget(self):
