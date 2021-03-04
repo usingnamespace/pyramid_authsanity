@@ -18,7 +18,7 @@ from pyramid_authsanity.interfaces import (
 
 def test_clean_principal_invalid():
     from pyramid_authsanity.policy import _clean_principal
-    from pyramid.security import Everyone
+    from pyramid.authorization import Everyone
 
     ret = _clean_principal(Everyone)
 
@@ -129,7 +129,7 @@ class TestAuthServicePolicy(object):
         assert authuserid is None
 
     def test_no_user_effective_principals(self):
-        from pyramid.security import Everyone
+        from pyramid.authorization import Everyone
         context = None
         request = self._makeOneRequest()
         source = fake_source_init([None, None])(context, request)
@@ -142,7 +142,7 @@ class TestAuthServicePolicy(object):
         assert [Everyone] == groups
 
     def test_user_bad_principal_effective_principals(self):
-        from pyramid.security import Everyone
+        from pyramid.authorization import Everyone
         context = None
         request = self._makeOneRequest()
         source = fake_source_init([Everyone, 'valid'])(context, request)
@@ -155,7 +155,7 @@ class TestAuthServicePolicy(object):
         assert [Everyone] == groups
 
     def test_effective_principals(self):
-        from pyramid.security import Everyone, Authenticated
+        from pyramid.authorization import Everyone, Authenticated
         context = None
         request = self._makeOneRequest()
         source = fake_source_init(['test', 'valid'])(context, request)
@@ -306,7 +306,7 @@ class TestAuthServicePolicyIntegration(object):
         assert authuserid is None
 
     def test_no_user_effective_principals(self):
-        from pyramid.security import Everyone
+        from pyramid.authorization import Everyone
         request = self._makeOneRequest()
         source = fake_source_init([None, None])
         auth = fake_auth_init()
@@ -318,7 +318,7 @@ class TestAuthServicePolicyIntegration(object):
         assert [Everyone] == groups
 
     def test_user_bad_principal_effective_principals(self):
-        from pyramid.security import Everyone
+        from pyramid.authorization import Everyone
         request = self._makeOneRequest()
         source = fake_source_init([Everyone, 'valid'])
         auth = fake_auth_init(fake_userid=Everyone, valid_tickets=['valid'])
@@ -330,7 +330,7 @@ class TestAuthServicePolicyIntegration(object):
         assert [Everyone] == groups
 
     def test_effective_principals(self):
-        from pyramid.security import Everyone, Authenticated
+        from pyramid.authorization import Everyone, Authenticated
         request = self._makeOneRequest()
         source = fake_source_init(['test', 'valid'])
         auth = fake_auth_init(fake_userid='test', valid_tickets=['valid'])

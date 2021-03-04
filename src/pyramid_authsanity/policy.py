@@ -6,7 +6,7 @@ from pyramid.interfaces import (
     IDebugLogger,
     )
 
-from pyramid.security import (
+from pyramid.authorization import (
     Authenticated,
     Everyone,
     )
