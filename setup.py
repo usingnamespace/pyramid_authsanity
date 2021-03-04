@@ -9,7 +9,7 @@ except IOError:
     README = CHANGES = ''
 
 requires = [
-    'pyramid',
+    'pyramid>=2.0',
     'zope.interface',
     'pyramid_services>=0.3'
 ]
@@ -27,7 +27,7 @@ docs_require = requires + [
 
 setup(
     name='pyramid_authsanity',
-    version='1.1.0',
+    version='2.0.0',
     description='An auth policy for the Pyramid Web Framework with sane defaults.',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
@@ -36,11 +36,10 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
     ],
