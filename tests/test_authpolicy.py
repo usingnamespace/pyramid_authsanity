@@ -241,11 +241,7 @@ class TestAuthServicePolicyIntegration(object):
         return AuthServicePolicy(debug=debug)
 
     def _makeOneRequest(self):
-        import types
-
         from pyramid.request import apply_request_extensions
-        from pyramid_services import find_service
-        from zope.interface.adapter import AdapterRegistry
 
         request = DummyRequest()
         request.registry = self.config.registry
