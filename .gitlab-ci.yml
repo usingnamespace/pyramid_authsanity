@@ -5,40 +5,12 @@
     tags:
         - docker
 
-test:2.7:
-    <<: *test
-    image: python:2.7
-    script:
-        - pip install tox
-        - TOXENV=py27 tox
-
-test:pypy:
-    <<: *test
-    image: pypy:2
-    script:
-        - pip install tox
-        - TOXENV=pypy tox
-
 test:pypy3:
     <<: *test
     image: pypy:3
     script:
         - pip install tox
         - TOXENV=pypy3 tox
-
-test:3.4:
-    <<: *test
-    image: python:3.4
-    script:
-        - pip install tox
-        - TOXENV=py34 tox
-
-test:3.5:
-    <<: *test
-    image: python:3.5
-    script:
-        - pip install tox
-        - TOXENV=py35 tox
 
 test:3.6:
     <<: *test
@@ -47,6 +19,34 @@ test:3.6:
         - pip install tox
         - TOXENV=py36 tox
 
+test:3.7:
+    <<: *test
+    image: python:3.7
+    script:
+        - pip install tox
+        - TOXENV=py37 tox
+
+test:3.8:
+    <<: *test
+    image: python:3.8
+    script:
+        - pip install tox
+        - TOXENV=py38 tox
+
+test:3.9:
+    <<: *test
+    image: python:3.9
+    script:
+        - pip install tox
+        - TOXENV=py39 tox
+
+test_cov:
+    <<: *test
+    image: python:3.9
+    script:
+        - pip install tox
+        - TOXENV=py39-cover tox
+
 test:pep8:
     <<: *test
     image: python:3.6
@@ -54,15 +54,8 @@ test:pep8:
         - pip install tox
         - TOXENV=lint tox
 
-test_cov:
-    <<: *test
-    image: quay.io/pypa/manylinux1_x86_64:latest
-    script:
-        - PATH=/opt/python/cp27-cp27mu/bin/:/opt/python/cp36-cp36m/bin/ pip install tox
-        - PATH=/opt/python/cp27-cp27mu/bin/:/opt/python/cp36-cp36m/bin/ TOXENV=py27,py36,coverage tox
-
 pages:
-    image: python:3.6
+    image: python:3.9
     script:
         - apt-get install make
         - pip install tox
