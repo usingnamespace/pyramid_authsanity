@@ -1,3 +1,11 @@
+2.0.0 (2021-03-07)
+==================
+
+- Remove support for Python 2, 3.4, and 3.5
+
+- Updated to use new Pyramid 2.0 import locations, please use 1.1.0 if you want
+  compatibility with lower versions of Pyramid.
+
 1.1.0 (2017-11-29)
 ==================
 
