@@ -35,7 +35,7 @@ class TestAuthServicePolicyIntegration(object):
 
         assert isinstance(auth_policy['policy'], AuthServicePolicy)
 
-        with pytest.raises(ValueError):
+        with pytest.raises(LookupError):
             find_service_factory(self.config, IAuthSourceService)
 
     def test_include_me_cookie_no_secret(self):
