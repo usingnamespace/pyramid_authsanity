@@ -1,22 +1,13 @@
-from webob.cookies import (
-    JSONSerializer,
-    SignedCookieProfile,
-    SignedSerializer,
-)
-
+from webob.cookies import JSONSerializer, SignedCookieProfile, SignedSerializer
 from zope.interface import implementer
 
-from .interfaces import (
-    IAuthSourceService,
-)
+from .interfaces import IAuthSourceService
 
 
-def SessionAuthSourceInitializer(
-    value_key='sanity.'
-):
+def SessionAuthSourceInitializer(value_key="sanity."):
     """ An authentication source that uses the current session """
 
-    value_key = value_key + 'value'
+    value_key = value_key + "value"
 
     @implementer(IAuthSourceService)
     class SessionAuthSource(object):
@@ -53,20 +44,20 @@ def SessionAuthSourceInitializer(
 
 def CookieAuthSourceInitializer(
     secret,
-    cookie_name='auth',
+    cookie_name="auth",
     secure=False,
     max_age=None,
     httponly=False,
     path="/",
     domains=None,
     debug=False,
-    hashalg='sha512',
+    hashalg="sha512",
 ):
     """ An authentication source that uses a unique cookie. """
 
     @implementer(IAuthSourceService)
     class CookieAuthSource(object):
-        vary = ['Cookie']
+        vary = ["Cookie"]
 
         def __init__(self, context, request):
             self.domains = domains
@@ -77,7 +68,7 @@ def CookieAuthSourceInitializer(
 
             self.cookie = SignedCookieProfile(
                 secret,
-                'authsanity',
+                "authsanity",
                 cookie_name,
                 secure=secure,
                 max_age=max_age,
@@ -85,7 +76,7 @@ def CookieAuthSourceInitializer(
                 path=path,
                 domains=domains,
                 hashalg=hashalg,
-                )
+            )
             # Bind the cookie to the current request
             self.cookie = self.cookie.bind(request)
 
@@ -106,15 +97,12 @@ def CookieAuthSourceInitializer(
     return CookieAuthSource
 
 
-def HeaderAuthSourceInitializer(
-    secret,
-    salt='sanity.header.'
-):
+def HeaderAuthSourceInitializer(secret, salt="sanity.header."):
     """ An authentication source that uses the Authorization header. """
 
     @implementer(IAuthSourceService)
     class HeaderAuthSource(object):
-        vary = ['Authorization']
+        vary = ["Authorization"]
 
         def __init__(self, context, request):
             self.request = request
@@ -125,7 +113,7 @@ def HeaderAuthSourceInitializer(
                 secret,
                 salt,
                 serializer=serializer,
-                )
+            )
 
         def _get_authorization(self):
             try:
@@ -139,7 +127,7 @@ def HeaderAuthSourceInitializer(
             try:
                 return self.serializer.dumps(value)
             except Exception:
-                return ''
+                return ""
 
         def get_value(self):
             if self.cur_val is None:
@@ -152,8 +140,8 @@ def HeaderAuthSourceInitializer(
                 self.cur_val = None
 
             token = self._create_authorization(value)
-            auth_info = str(b'Bearer ' + token, 'latin-1', 'strict')
-            return [('Authorization', auth_info)]
+            auth_info = str(b"Bearer " + token, "latin-1", "strict")
+            return [("Authorization", auth_info)]
 
         def headers_forget(self):
             if self.cur_val is None:
