@@ -2,7 +2,7 @@ import sys
 
 import pytest
 
-from collections import Iterable
+from collections.abc import Iterable
 
 from pyramid_authsanity.interfaces import IAuthSourceService
 from pyramid_authsanity import sources
