@@ -1,5 +1,5 @@
-import sys
 from collections.abc import Iterable
+import sys
 
 import pytest
 from zope.interface.verify import verifyObject
@@ -112,14 +112,16 @@ class TestCookieAuthSource(_TestAuthSource):
         assert isinstance(headers, Iterable)
 
         # Should set an empty cookie
+
         for h in headers:
             assert h[1].startswith("auth=;")
 
     def test_get_value_cookie(self):
         request = DummyRequest()
-        request.cookies[
-            "auth"
-        ] = "JgEICiZyfFFc3Qcx5O84h4u8NSZIi51xVMYs_HyP94BO1aXGZpME_LJ1UZgfdAMJDoaGaLCt_y-x6FSBh3ZKDyJ0ZXN0Ig"
+        request.cookies["auth"] = (
+            "JgEICiZyfFFc3Qcx5O84h4u8NSZIi51xVMYs_HyP94BO1aXGZpME_LJ1UZgfdAMJD"
+            "oaGaLCt_y-x6FSBh3ZKDyJ0ZXN0Ig"
+        )
         source = self._makeOne(request=request)
         val = source.get_value()
 
@@ -127,9 +129,10 @@ class TestCookieAuthSource(_TestAuthSource):
 
     def test_get_value_bad_cookie(self):
         request = DummyRequest()
-        request.cookies[
-            "auth"
-        ] = "jxxxxxxxfFFc3Qcx5O84h4u8NSZIi51xVMYs_HyP94BO1aXGZpME_LJ1UZgfdAMJDoaGaLCt_y-x6FSBh3ZKDyJ0ZXN0Ig"
+        request.cookies["auth"] = (
+            "jxxxxxxxfFFc3Qcx5O84h4u8NSZIi51xVMYs_HyP94BO1aXGZpME_LJ1UZgfdAMJD"
+            "oaGaLCt_y-x6FSBh3ZKDyJ0ZXN0Ig"
+        )
         source = self._makeOne(request=request)
         val = source.get_value()
 
@@ -212,7 +215,10 @@ class TestHeaderAuthSource(_TestAuthSource):
         request = DummyRequest()
         request.authorization = (
             "Bearer",
-            "zASow9lpNp6cr7FirG4kV6vQym8i75kLPZ7orcPMaemV4iaf92P-DTR0om_h0trImTEOXyv514obhbcB-3fvKyJ0ZXN0Ig",
+            (
+                "zASow9lpNp6cr7FirG4kV6vQym8i75kLPZ7orcPMaemV4iaf92P-DTR0om_h0trI"
+                "mTEOXyv514obhbcB-3fvKyJ0ZXN0Ig"
+            ),
         )
         source = self._makeOne(request=request)
         val = source.get_value()

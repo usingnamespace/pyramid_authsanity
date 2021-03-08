@@ -37,13 +37,13 @@ class TestAddVaryCallback(object):
 def test_int_or_none_none():
     from pyramid_authsanity.util import int_or_none
 
-    assert None == int_or_none(None)
+    assert int_or_none(None) is None
 
 
 def test_int_or_none_int():
     from pyramid_authsanity.util import int_or_none
 
-    assert 1 == int_or_none(1)
+    assert int_or_none(1) == 1
 
 
 def test_int_or_none_fail():

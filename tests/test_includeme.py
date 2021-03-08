@@ -1,7 +1,7 @@
-import pyramid.testing
-import pytest
 from pyramid.authorization import ACLAuthorizationPolicy
+import pyramid.testing
 from pyramid_services import find_service_factory
+import pytest
 from zope.interface.verify import verifyClass
 
 from pyramid_authsanity.interfaces import IAuthSourceService

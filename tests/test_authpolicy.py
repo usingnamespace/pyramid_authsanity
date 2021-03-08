@@ -1,7 +1,7 @@
-import pyramid.testing
-import pytest
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.interfaces import IAuthenticationPolicy
+import pyramid.testing
+import pytest
 from zope.interface import implementer
 from zope.interface.verify import verifyClass, verifyObject
 
