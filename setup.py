@@ -45,6 +45,7 @@ setup(
         "Programming Language :: Python :: Implementation :: PyPy",
     ],
     keywords="pyramid authorization policy",
+    python_requires=">=3.6",
     author="Bert JW Regeer",
     author_email="bertjw@regeer.org",
     url="https://github.com/usingnamespace/pyramid_authsanity",
