@@ -1,6 +1,7 @@
 graft src
 graft tests
 graft docs
+graft .github
 
 include README.rst
 include CHANGES.rst
@@ -8,5 +9,6 @@ include LICENSE
 
 include .coveragerc
 include tox.ini .travis.yml rtd.txt .gitlab-ci.yml
+include pyproject.toml
 
 recursive-exclude * __pycache__ *.py[cod]
