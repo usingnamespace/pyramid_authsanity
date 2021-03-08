@@ -1,27 +1,15 @@
 import base64
 import os
 
-from pyramid.interfaces import (
-    IAuthenticationPolicy,
-    IDebugLogger,
-    )
-
-from pyramid.security import (
-    Authenticated,
-    Everyone,
-    )
-
-from .util import (
-    add_vary_callback,
-    _find_services,
-    _session_registered,
-    )
-
+from pyramid.authorization import Authenticated, Everyone
+from pyramid.interfaces import IAuthenticationPolicy, IDebugLogger
 from zope.interface import implementer
+
+from .util import _find_services, _session_registered, add_vary_callback
 
 
 def _clean_principal(princid):
-    """ Utility function that cleans up the passed in principal
+    """Utility function that cleans up the passed in principal
     This can easily also be extended for example to make sure that certain
     usernames are automatically off-limits.
     """
@@ -39,9 +27,9 @@ class AuthServicePolicy(object):
         logger = request.registry.queryUtility(IDebugLogger)
         if logger:
             cls = self.__class__
-            classname = cls.__module__ + '.' + cls.__name__
-            methodname = classname + '.' + methodname
-            logger.debug(methodname + ': ' + msg)
+            classname = cls.__module__ + "." + cls.__name__
+            methodname = classname + "." + methodname
+            logger.debug(methodname + ": " + msg)
 
     _find_services = staticmethod(_find_services)  # Testing
     _session_registered = staticmethod(_session_registered)  # Testing
@@ -64,15 +52,18 @@ class AuthServicePolicy(object):
             userid = authsvc.userid()
         except Exception:
             debug and self._log(
-                'authentication has not yet been completed',
-                'authenticated_userid',
-                request
+                "authentication has not yet been completed",
+                "authenticated_userid",
+                request,
             )
             (principal, ticket) = sourcesvc.get_value()
 
             debug and self._log(
-                'source service provided information: (principal: %r, ticket: %r)'
-                % (principal, ticket), 'authenticated_userid', request)
+                "source service provided information: (principal: %r, ticket: %r)"
+                % (principal, ticket),
+                "authenticated_userid",
+                request,
+            )
 
             # Verify the principal and the ticket, even if None
             authsvc.verify_ticket(principal, ticket)
@@ -84,9 +75,9 @@ class AuthServicePolicy(object):
                 userid = None
 
         debug and self._log(
-            'authenticated_userid returning: %r' % (userid,),
-            'authenticated_userid',
-            request
+            "authenticated_userid returning: %r" % (userid,),
+            "authenticated_userid",
+            request,
         )
 
         return userid
@@ -101,20 +92,22 @@ class AuthServicePolicy(object):
 
         if userid is None:
             debug and self._log(
-                'authenticated_userid returned %r; returning %r' % (
-                    userid, effective_principals),
-                'effective_principals',
-                request
-                )
+                "authenticated_userid returned %r; returning %r"
+                % (userid, effective_principals),
+                "effective_principals",
+                request,
+            )
             return effective_principals
 
         if _clean_principal(userid) is None:
             debug and self._log(
-                ('authenticated_userid returned disallowed %r; returning %r '
-                 'as if it was None' % (userid, effective_principals)),
-                'effective_principals',
-                request
-                )
+                (
+                    "authenticated_userid returned disallowed %r; returning %r "
+                    "as if it was None" % (userid, effective_principals)
+                ),
+                "effective_principals",
+                request,
+            )
             return effective_principals
 
         effective_principals.append(Authenticated)
@@ -122,10 +115,9 @@ class AuthServicePolicy(object):
         effective_principals.extend(authsvc.groups())
 
         debug and self._log(
-            'returning effective principals: %r' % (
-                effective_principals,),
-            'effective_principals',
-            request
+            "returning effective principals: %r" % (effective_principals,),
+            "effective_principals",
+            request,
         )
         return effective_principals
 
@@ -143,19 +135,15 @@ class AuthServicePolicy(object):
         request.add_response_callback(add_vary_callback(sourcesvc.vary))
 
         value = {}
-        value['principal'] = principal
-        value['ticket'] = ticket = (
-            base64.urlsafe_b64encode(
-                os.urandom(32)
-            ).
-            rstrip(b"=").
-            decode('ascii')
+        value["principal"] = principal
+        value["ticket"] = ticket = (
+            base64.urlsafe_b64encode(os.urandom(32)).rstrip(b"=").decode("ascii")
         )
 
         debug and self._log(
-            'Remember principal: %r, ticket: %r' % (principal, ticket),
-            'remember',
-            request
+            "Remember principal: %r, ticket: %r" % (principal, ticket),
+            "remember",
+            request,
         )
 
         authsvc.add_ticket(principal, ticket)
@@ -188,7 +176,7 @@ class AuthServicePolicy(object):
 
         (_, ticket) = sourcesvc.get_value()
 
-        debug and self._log('Forgetting ticket: %r' % (ticket,), 'forget', request)
+        debug and self._log("Forgetting ticket: %r" % (ticket,), "forget", request)
         authsvc.remove_ticket(ticket)
 
         # Clear the session by invalidating it
