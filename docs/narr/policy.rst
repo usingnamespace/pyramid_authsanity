@@ -2,7 +2,7 @@ The authentication policy
 =========================
 
 This authentication policy has two moving pieces, they work together to provide
-an easy to use authenitcation policy that provides more security by allowing
+an easy to use authentication policy that provides more security by allowing
 the server to terminate an active authentication session.
 
 Source Service
