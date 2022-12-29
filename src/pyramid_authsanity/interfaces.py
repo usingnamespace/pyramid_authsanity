@@ -2,12 +2,12 @@ from zope.interface import Attribute, Interface
 
 
 class IAuthSourceService(Interface):
-    """ Represents an authentication source. """
+    """Represents an authentication source."""
 
     vary = Attribute("List of HTTP headers to Vary the response by.")
 
     def get_value():
-        """ Returns the opaque value that was stored. """
+        """Returns the opaque value that was stored."""
 
     def headers_remember(value):
         """Returns any and all headers for remembering the value, as a list.
@@ -36,7 +36,7 @@ class IAuthService(Interface):
         added by the authentication policy."""
 
     def verify_ticket(principal, ticket):
-        """ Verify that the principal matches the ticket given. """
+        """Verify that the principal matches the ticket given."""
 
     def add_ticket(principal, ticket):
         """Add a new ticket for the principal. If there is a failure, due to a
@@ -44,4 +44,4 @@ class IAuthService(Interface):
         should raise an error"""
 
     def remove_ticket(ticket):
-        """ Remove a ticket for the current user. Upon success return True """
+        """Remove a ticket for the current user. Upon success return True"""
