@@ -5,7 +5,7 @@ from .interfaces import IAuthSourceService
 
 
 def SessionAuthSourceInitializer(value_key="sanity."):
-    """ An authentication source that uses the current session """
+    """An authentication source that uses the current session"""
 
     value_key = value_key + "value"
 
@@ -53,7 +53,7 @@ def CookieAuthSourceInitializer(
     debug=False,
     hashalg="sha512",
 ):
-    """ An authentication source that uses a unique cookie. """
+    """An authentication source that uses a unique cookie."""
 
     @implementer(IAuthSourceService)
     class CookieAuthSource(object):
@@ -98,7 +98,7 @@ def CookieAuthSourceInitializer(
 
 
 def HeaderAuthSourceInitializer(secret, salt="sanity.header."):
-    """ An authentication source that uses the Authorization header. """
+    """An authentication source that uses the Authorization header."""
 
     @implementer(IAuthSourceService)
     class HeaderAuthSource(object):

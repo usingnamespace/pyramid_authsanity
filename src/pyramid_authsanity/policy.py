@@ -39,10 +39,10 @@ class AuthServicePolicy(object):
         self.debug = debug
 
     def unauthenticated_userid(self, request):
-        """ We do not allow the unauthenticated userid to be used. """
+        """We do not allow the unauthenticated userid to be used."""
 
     def authenticated_userid(self, request):
-        """ Returns the authenticated userid for this request. """
+        """Returns the authenticated userid for this request."""
         debug = self.debug
 
         (sourcesvc, authsvc) = self._find_services(request)
@@ -83,7 +83,7 @@ class AuthServicePolicy(object):
         return userid
 
     def effective_principals(self, request):
-        """ A list of effective principals derived from request. """
+        """A list of effective principals derived from request."""
         debug = self.debug
         effective_principals = [Everyone]
 
@@ -122,7 +122,7 @@ class AuthServicePolicy(object):
         return effective_principals
 
     def remember(self, request, principal, **kw):
-        """ Returns a list of headers that are to be set from the source service. """
+        """Returns a list of headers that are to be set from the source service."""
         debug = self.debug
 
         if self._have_session is _marker:
@@ -164,7 +164,7 @@ class AuthServicePolicy(object):
         return sourcesvc.headers_remember([principal, ticket])
 
     def forget(self, request):
-        """ A list of headers which will delete appropriate cookies."""
+        """A list of headers which will delete appropriate cookies."""
         debug = self.debug
 
         if self._have_session is _marker:
